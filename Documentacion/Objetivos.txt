@@ -1,0 +1,17 @@
+Objetivos:
+
+beta 1.0.0
+
+    1. Imprimir por pantalla animación de todos los demás jugadores conectados.
+    2. Programa robusto que no de fallos y posibilidad de jugar offline.
+
+beta 1.0.1
+
+    1. Capacidad para interaccionar con los otros jugadores.
+    2. Menu desplegable de opciones.
+
+beta 1.0.2
+
+    1. Capacidad para intercambiar pokemons.
+
+...
