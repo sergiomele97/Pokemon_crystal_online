@@ -1,0 +1,1612 @@
+******************************************************************************
+Giegue's Master Guide to Hacking Pokemons Games Red-Crystal
+2001-2002 Giegue
+Some of this document has been taken from other documents in order to save time. Said documents will be credited below.
+******************************************************************************
+Pgamers.net Forum: http://www.pgamers.net
+PokeEdit Database ver. .57, GsGamefreak http://GsGameFreak.RetroBase.Com
+******************************************************************************
+OK. now with the credits out of the way, on to the good stuff.
+
+1¥¥ Which games does this cover?
+2¥¥ What makes this document better than any other?
+2¥¥ How do you make the yen sign? (Hold alt and type the number 669 on the keypad.)
+3¥¥ How do I edit the text in the game?
+4¥¥ How do I edit the Pokedex information?
+5¥¥ How do I edit wild encounters with wild pokemon?
+6¥¥ How do I edit a trainer's pokemon?
+7¥¥ How do I edit store items?
+8¥¥ How do I edit a Pokemon's stats? 
+9¥¥ How do I edit a trainer's name and type?
+10¥ How do I edit palettes and graphics?
+11¥ How do I edit techniques?
+12¥ How do I edit evolutions?
+13¥ How do I edit the maps?
+14¥ I found something not listed here. What do I do?
+15¥ HeYyy D00d, GivE I ThaA R00mZZzZ!
+16¥ Where can I find the ROM? (The internet, but I assume you already have it)
+17¥ OK, I know how to edit the ROM. Where is all this data?
+18¥ More info and opinions
+
+1¥¥: Which games does this cover?
+***************************
+	In case you were wondering, the guide covers the following pokemon games: Red, Blue, Yellow, Gold, Silver, Crystal. Please don't hold me to this if in Yellow or Crystal some of the data is different from the other games, they might use a slightly different format or position than the others.
+
+2¥¥: What makes this document better than any other?
+******************************************
+	Well, most if not all of this information is probably in another document, somewhere, but this is the only one that has all of it in one easy document (at the time of this writing). It is is a standard format so most computers can open it, WIN, MAC, UNIX, etc. should not have a problem viewing this.
+
+3¥¥: How do I edit the text in this game?
+*******************************
+	First, you need a table file. That is a file that is supported by a hex editor that changes the value of hex codes. For example, a pokemon name might look like "#(hI@l" in regular hex, but with a table it could be "MEOWTH". This helps greatly in text editing, but otherwhere you might want to just use the straight hex codes.
+
+The following tables are in the proper format for Hexposure, and possibly others. I chose it because it is the easiest to make tables for. Just copy and paste the following letters and numbers into a blank text file and name it "pokemon.tbl", replacing pokemon with the name of your pokemon RBYGS ROM.
+RBYGS table beging next line:
+*55
+/00
+4F==
+57=#
+51=*
+52=A1
+53=A2
+54=PK
+55=+
+58=$
+7F= 
+80=A
+81=B
+82=C
+83=D
+84=E
+85=F
+86=G
+87=H
+88=I
+89=J
+8A=K
+8B=L
+8C=M
+8D=N
+8E=O
+8F=P
+90=Q
+91=R
+92=S
+93=T
+94=U
+95=V
+96=W
+97=X
+98=Y
+99=Z
+9C=:
+A0=a
+A1=b
+A2=c
+A3=d
+A4=e
+A5=f
+A6=g
+A7=h
+A8=i
+A9=j
+AA=k
+AB=l
+AC=m
+AD=n
+AE=o
+AF=p
+B0=q
+B1=r
+B2=s
+B3=t
+B4=u
+B5=v
+B6=w
+B7=x
+B8=y
+B9=z
+BA=‚
+BC='l
+BD='s
+BE='t
+BF='v
+E0='
+E1=PK
+E2=MN
+E3=-
+E4='r
+E5='m
+E6=?
+E7=!
+E8=.
+F4=,
+F6=0
+F7=1
+F8=2
+F9=3
+FA=4
+FB=5
+FC=6
+FD=7
+FE=8
+FF=9
+end RBYGS table.Crystal table begins next line:
+00=A
+01=B
+02=C
+03=D
+04=E
+05=F
+06=G
+07=H
+08=I
+09=J
+0A=K
+0B=L
+0C=M
+0D=N
+0E=O
+0F=P
+10=Q
+11=R
+12=S
+13=T
+14=U
+15=V
+16=W
+17=X
+18=Y
+19=Z
+1A=a
+1B=b
+1C=c
+1D=d
+1E=e
+1F=f
+20=g
+21=h
+22=i
+23=j
+24=k
+25=l
+26=m
+27=n
+28=o
+29=p
+2A=q
+2B=r
+2C=s
+2D=t
+2E=u
+2F=v
+30=w
+31=x
+32=y
+33=z
+34=0
+35=1
+36=2
+37=3
+38=4
+39=5
+3A=6
+3B=7
+3C=8
+3D=9
+3E=A^
+3F=A~
+40=A:
+41=C,
+42=E`
+43=E'
+44=E^
+45=E:
+46=I^
+47=I:
+48=O^
+49=O:
+4A=U^
+4B=U:
+4C=N~
+4D=O'
+4E=U`
+4F=U'
+50=a`
+51=a'
+52=a^
+53=a:
+54=c,
+55=e`
+56=e'
+57=:-
+58=u'
+59=e^
+5A=e:
+5B=i^
+5C=i:
+5D=o^
+5E=i'
+5F=n~
+60=o'
+61=o:
+62=u^
+63=u:
+64=ß
+65=.
+66=,
+67=!
+68=?
+69=;
+6A=:
+6B= 
+6C=¡
+6D=¿
+6E=-
+6F='
+70=/
+71=&
+73=>
+76=$
+78=+
+F1=*
+
+OK, it's over. Now, open Hexposure and the Pokemon ROM. If everything is done correctly, you should be able to search for "OAK" and find an area of readable text. To edit this, just push the TAB key and type over the text that is currently there. Be careful not to type over the other hex codes, as they involve other functions and could seiously mess up that portion of the game and other text and functions. In GSC, trainer names start around 0399CB and in RBY there aren't individual names, but the types starts at 0399FF.
+
+4¥¥: How do I edit the Pokedex information?
+*********************************
+	This is simple. Just follow the instructions above to make a table, then just search for part of the description of the pokemon's entry and it should appear. If you are going to hack all of it, just go to offset 1A0006 in GS to start from the beginning. There are a few gaps in places, so as always, make a backup and watch out.
+
+5¥¥: How do I edit encounters with wild pokeon?
+*************************************
+	This part does not use a table, but if you move the cursor to the hex side of Hexposure (it starts there, or hit TAB if you've been text editing) and get ready for a short lesson in data, here it is. 
+	First, the basic info. There will be 7 pokemon in an area, and in GSC there are 3 times of day. You cannot add more to the area without knowing how to program for a Game Boy. Get over it. The data is stored like this: XXYY 
+XX: the level of the pokemon 
+YY: the hex address of the pokemon
+
+The level is just the number in hex, but the pokemon is different is the games. Here is the list for RBY, and GSC after:
+
+RBY Pokemon hex codes
+
+00 Missingno         
+01 Rydon 	
+02 Kangaskahn	
+03 Nidoran M     
+04 Clefairy	
+05 Spearow	
+06 Voltorb	
+07 Nidoking	
+08 Slowbro	
+09 Ivysaur	
+0A Eggecutor	
+0B Licktung	
+0C Exegute	
+0D Grimer	
+0E Gengar	
+0F Nidoran F     
+10 Nidoqueen	
+11 Cubone	
+12 Ryhorn	
+13 Lapras	
+14 Arcanine	
+15 Mew    	
+16 Gyrados	
+17 Shellder	
+18 Tentacool	
+19 Gastly 	
+1A Scyther	
+1B Staryu	
+1C Blastoice	
+1D Pinser	
+1E Tangala	
+21 Growlithe	
+22 Onix    	
+23 Fearow	
+24 Pidgey	
+25 Slowpoke	
+26 Kadabra	
+27 Graveler	
+28 Chansey	
+29 Machoke	
+2A Mr. Mime	
+2B Hitmonlee	
+2C Hitmonchan	
+2D Arbok 	
+2E Parasect 	
+2F Psyduck	
+30 Drowzee	
+31 Golom 	
+33 Magmar	
+35 Electabuzz	
+36 Magneton	
+37 Koffing	
+39 Mankey	
+3A Seel    	
+3B Digglett	
+3C Tarous	
+40 FarFetche'd	
+41 Venonat	
+42 Dragonite	
+46 Doduo 	
+47 Poliwag	
+48 Jynx    	
+49 Moltres	
+4A Articuno	
+4B Zapdos 	
+4C Ditto   	
+4D Meowth	
+4E Krabby	
+52 Vulpix  	
+53 Ninetails	
+54 Pikachu	
+55 Raichu	
+58 Dratini 	
+59 Dragonair	
+5A Kabuto	
+5B Kabutops	
+5C Horsea	
+5D Seadra	
+60 Sandshrew	
+61 Sandslash	
+62 Omanyte	
+63 Omaster	
+64 Jigglypuff	
+65 Wigglytuff	
+66 Eevee  	
+67 Flareon	
+68 Jolteon	
+69 Vaporeon	
+6A Machop	
+6B Zubat  	
+6C Ekans	
+6D Paras 	
+6E Poliwhirl  	
+6F Poliwrath	
+70 Weedle	
+71 Kakuna	
+72 Beedril	
+74 Dodrio 	
+75 Primeape	
+76 Dugtrio	
+77 Venomoth	
+78 Dewgong	
+7B Caterpie	
+7C Metapod	
+7D Butterfree	
+7E Machamp	
+80 Golduck	
+81 Hypno 	
+82 Golbat 	
+83 Mewtwo	
+84 Snorlax	
+85 Magikarp	
+88 Muk     	
+8A Kingler	
+8B Cloyster	
+8D Electrode	
+8E Clefable	
+8F Weezing	
+90 Persian	
+91 Marowak	
+93 Haunter	
+94 Abra    	
+95 Alakazzam	
+96 Pidgeotto	
+97 Pidgeot	
+98 Starmie	
+99 Bulbasaur	
+9A Venusaur	
+9B Tentacruel	
+9D Goldeen	
+9E Seaking	
+A3 Ponyta	
+A4 Rapidash	
+A5 Rattata	
+A6 Ratticate	
+A7 Nidorino	
+A8 Nidorina	
+A9 Geodude	
+AA Porygon 	
+AB Areodactyl	
+AD Magnemite 	
+B0 Charmander 	
+B1 Squirtle	
+B2 Charmeleon	
+B3 Wartortle	
+B4 Charizard	
+B9 Oddish	
+BA Gloom	
+BB Vileplume	
+BC Bellsprout	
+BD Weepinbell	
+BE Victreebell	
+
+That is one disorganized list. At least they got more organized for GSC:
+
+01 - Bulbasaur 
+02 - Ivysaur 
+03 - Venusaur 
+04 - Charmander 
+05 - Charmeleon 
+06 - Charizard 
+07 - Squirtle 
+08 - Wartortle 
+09 - Blasttoise 
+0A - Caterpie 
+0B - Metapod 
+0C - Butterfree 
+0D - Weedle 
+0E - Kakuna 
+0F - Beedrill 
+10 - Pidgey 
+11 - Pidgeotto 
+12 - Pidgeot 
+13 - Rattata 
+14 - Raticate 
+15 - Spearow 
+16 - Fearow 
+17 - Ekans 
+18 - Arbok 
+19 - Pikachu 
+1A - Raichu 
+1B - Sandshrew 
+1C - Sandslash 
+1D - Nidoran (F) 
+1E - Nidorina 
+1F - Nidoqueen 
+20 - Nidoran male 
+21 - Nidorino 
+22 - Nidoking 
+23 - Clefairy 
+24 - Clefable 
+25 - Vulpix 
+26 - Ninetails 
+27 - Jigglypuff 
+28 - Wigglytuff 
+29 - Zubat 
+2A - Golbat 
+2B - Oddish 
+2C - Gloom 
+2D - Vileplume 
+2E - Paras 
+2F - Parasect 
+30 - Venonat 
+31 - Venomoth 
+32 - Diglett 
+33 - Dugtrio 
+34 - Meowth 
+35 - Persian 
+36 - Psyduck 
+37 - Golduck 
+38 - Mankey 
+39 - Primeape 
+3A - Growlithe 
+3B - Arcanine 
+3C - Poliwag 
+3D - Poliwhirl 
+3E - Poliwrath 
+3F - Abra 
+40 - Kadabra 
+41 - Alakazam 
+42 - Machop 
+43 - Machoke 
+44 - Machamp 
+45 - Bellsprout 
+46 - Weepinbell 
+47 - Victreebell 
+48 - Tentacool 
+49 - Tentacruel 
+4A - Geodude 
+4B - Graveler 
+4C - Golem 
+4D - Ponyta 
+4E - Rapidash 
+4F - Slowpoke 
+50 - Slowbro 
+51 - Magnemite 
+52 - Magneton 
+53 - Farfetch'd 
+54 - Doduo  
+55 - Dodrio 
+56 - Seel 
+57 - Dewgong 
+58 - Grimer 
+59 - Muk 
+5A - Shellder 
+5B - Cloyster 
+5C - Gastly 
+5D - Haunter 
+5E - Gengar 
+5F - Onix 
+60 - Drowzee 
+61 - Hypno 
+62 - Krabby 
+63 - Kingler 
+64 - Voltorb 
+65 - Electrode 
+66 - Exeggcute 
+67 - Exeggcutor 
+68 - Cubone 
+69 - Marowak 
+6A - Hitmonlee 
+6B - Hitmonchan 
+6C - Lickitung 
+6D - Koffing 
+6E - Weezing 
+6F - Rhyhorn 
+70 - Rhydon 
+71 - Chansey 
+72 - Tangela 
+73 - Kangaskhan 
+74 - Horsea 
+75 - Seadra 
+76 - Goldeen 
+77 - Seaking 
+78 - Staryu 
+79 - Starmie 
+7A - Mr. Mime 
+7B - Scyther 
+7C - Jynx 
+7D - Electabuzz 
+7E - Magmar 
+7F - Pinsir 
+80 - Tauros 
+81 - Magikarp 
+82 - Gyarados 
+83 - Lapras 
+84 - Ditto 
+85 - Eevee 
+86 - Vaporeon 
+87 - Jolteon 
+88 - Flareon 
+89 - Porygon 
+8A - Omanyte 
+8B - Omastar 
+8C - Kabuto 
+8D - Kabutops 
+8E - Aerodactyl 
+8F - Snorlax 
+90 - Articuno 
+91 - Zapdos 
+92 - Moltres 
+93 - Dratini 
+94 - Dragonair 
+95 - Dragonite 
+96 - Mewtwo 
+97 - Mew 
+98 - Chikorita 
+99 - Bayleef 
+9A - Meganium 
+9B - Cyndaquil 
+9C - Quilava 
+9D - Typhlosion 
+9E - Totodile 
+9F - Croconaw 
+A0 - Feraligatr 
+A1 - Sentret 
+A2 - Furret 
+A3 - Hoothoot 
+A4 - Noctowl 
+A5 - Ledyba 
+A6 - Ledian 
+A7 - Spinarak 
+A8 - Ariados 
+A9 - Crobat 
+AA - Chinchou 
+AB - Lanturn 
+AC - Pichu 
+AD - Cleffa 
+AE - Igglybuff 
+AF - Togepi 
+B0 - Togetic 
+B1 - Natu 
+B2 - Xatu 
+B3 - Mareep 
+B4 - Flaaffy 
+B5 - Ampharos 
+B6 - Bellossom 
+B7 - Marill 
+B8 - Azumarill 
+B9 - Sudowoodo 
+BA - Politoed 
+BB - Hoppip 
+BC - Skiploom 
+BD - Jumpluff 
+BE - Aipom 
+BF - Sunkern 
+C0 - Sunflora 
+C1 - Yanma 
+C2 - Wooper 
+C3 - Quagsire 
+C4 - Espeon 
+C5 - Umbreon 
+C6 - Murkrow 
+C7 - Slowking 
+C8 - Misdreavus 
+C9 - Unown 
+CA - Wobbuffet 
+CB - Girafarig 
+CC - Pineco 
+CD - Forretress 
+CE - Dunsparce 
+CF - Gligar 
+D0 - Steelix 
+D1 - Snubbull 
+D2 - Granbull 
+D3 - Qwilfish 
+D4 - Scizor 
+D5 - Shuckle 
+D6 - Heracross 
+D7 - Sneasel 
+D8 - Teddiursa 
+D9 - Ursaring 
+DA - Slugma 
+DB - Magcargo 
+DC - Swinub 
+DD - Piloswine 
+DE - Corsola 
+DF - Remoraid 
+E0 - Octillery 
+E1 - Delibird 
+E2 - Mantine 
+E3 - Skarmory 
+E4 - Houndour 
+E5 - Houndoom 
+E6 - Kingdra 
+E7 - Phanpy 
+E8 - Donphan 
+E9 - Porygon2 
+EA - Stantler 
+EB - Smeargle 
+EC - Tyrogue 
+ED - Hitmontop 
+EE - Smoochum 
+EF - Elekid 
+F0 - Magby 
+F1 - Miltank 
+F2 - Blissey 
+F3 - Raikou 
+F4 - Entei 
+F5 - Suicune 
+F6 - Larvitar 
+F7 - Pupitar 
+F8 - Tyranitar 
+F9 - Lugia 
+FA - Ho-oh 
+FB - Celebi
+
+	Alright, easy list! Now, for GSC, the wild encounters start around 02B405, there may be a few before that, and there are more after that. The GSC data is 42 bytes ling, and the entries have a 5-byte header before them, usually ending with XXYY191919. That signals where the next entry starts, and everything after the last 19 should be safe to hack. Some areas in GSC do not like being edited, and I have a few in my edited ROM that no longer have wild encounters for some reason. more later when I find out. In RBY, the data follows a similiar structure, but it is 14 bytes long, with a different header. I have not edited RBY much, so I have more info on GSC. Remember that as you read this whole document.
+
+6¥¥: How do I edit a trainers pokemon?
+******************************
+	The same way that you would with wild pokemon. Just fight the trainer, write down the level and type of his pokemon, in order, and search for the hex values. In GSC, they tend to appear after the trainer's name, so you can just search for that. The Hex address where they start is around 03A3B6 in RBY and 0399CB in GSC. In GSC, the repeat phone call fights are usually after the first one, so don't get confused.
+
+7¥¥: How do I edit store items?
+************************
+	Well, there are more hex codes to look up for this. Here they are again, RBY preceding GSC:
+
+00 - ?????
+01 - Master Ball
+02 - Ultra Ball
+03 - Great Ball
+04 - Poké Ball
+05 - Town Map
+06 - Bicycle
+07 - Surf Without Pokémon
+08 - Safari Ball
+09 - Poké-Dex
+0A - Moon Stone
+0B - Antidote
+0C - Burn Heal
+0D - Ice Heal
+0E - Awakening
+0F - Parlyz Heal
+10 - Full Restore
+11 - Max Potion
+12 - Hyper Potion
+13 - Super Potion
+14 - Potion
+15 - Boulder Badge
+16 - Cacade Badge
+17 - Thunder Badge
+18 - Rainbow Badge
+19 - Soul Badge
+1A - Marsh Badge
+1B - Volcano Badge
+1C - Earth Badge
+1D - Escape Rope
+1E - Repel
+1F - Old Amber
+20 - Fire Stone
+21 - Thunder Stone
+22 - Water Stone
+23 - HP Up
+24 - Protein
+25 - Iron
+26 - Carbos
+27 - Calcium
+28 - Rare Candy
+29 - Dome Fossil
+2A - Helix Fossil
+2B - Secret Key
+2C - ?????
+2D - Bike Voucher
+2E - X Accuracy
+2F - Leaf Stone
+30 - Card Key
+31 - Nugget
+32 - PP Up
+33 - Poké Doll
+34 - Full Heal
+35 - Revive
+36 - Max Revive
+37 - Grand Special
+38 - Super Repel
+39 - Max Repel
+3A - Dire Hit
+3B - Coin
+3C - Fresh Water
+3D - Soda Pop
+3E - Lemonade
+3F - S.S. Ticket
+40 - Gold Teeth
+41 - X Attack
+42 - X Defend
+43 - X Speed
+44 - X Special
+45 - Coin Case
+46 - Oak's Parcel
+47 - Item Finder
+48 - Silph Scope
+49 - Poké Flute
+4A - Lift Key
+4B - Exp. All
+4C - Old Rod
+4D - Good Rod
+4E - Super Rod
+4F - PP Up
+50 - Ether
+51 - Max Ether
+52 - Elixer
+53 - Max Elixer
+
+	Yes, you can buy the badges. I believe they will not show up, but their effects still happen. 
+
+GSC items:
+
+01 - Master Ball 
+02 - Ultra Ball 
+03 - Bright Powder 
+04 - Great Ball 
+05 - poke Ball 
+06 - N/A 
+07 - Bicycle 
+08 - Moon Stone 
+09 - Antidote 
+0A - Burn heal 
+0B - Ice heal 
+0C - Awakening 
+0D - Paralyze heal 
+0E - Full Restore 
+0F - Max Potion 
+10 - Hyper Potion 
+11 - Super Potion 
+12 - Potion 
+13 - Escape Rope 
+14 - Repel 
+15 - Max Ether 
+16 - Fire Stone 
+17 - Thunder Stone 
+18 - Water Stone 
+19 - N/A 
+1A - HP Up 
+1B - Protein 
+1C - Iron 
+1D - Carbos 
+1E - Lucky Punch 
+1F - Calcium 
+20 - Rare Candy 
+21 - X Accuracy 
+22 - Leaf Stone 
+23 - Metal Powder 
+24 - Nugget 
+25 - pokeDoll 
+26 - Full Heal 
+27 - Revive 
+28 - Max Revive 
+29 - Guard Spec. 
+2A - Super Repel 
+2B - Max Repel 
+2C - Dire Hit 
+2D - N/A 
+2E - Fresh Water 
+2F - Soda Pop 
+30 - Lemonade 
+31 - X - Attack 
+32 - N/A 
+33 - X - Defend 
+34 - X - Speed 
+35 - X - Special 
+36 - Coin Case 
+37 - Item Finder 
+38 - N/A 
+39 - Exp. Share 
+3A - Old Rod 
+3B - Good Rod 
+3C - Silver Leaf 
+3D - Super Rod 
+3E - PP UP 
+3F - Ether 
+40 - Max Ether 
+41 - Elixer 
+42 - Red Scale 
+43 - Secret Potion 
+44 - S.S.Aqua Ticket 
+45 - Mystery Egg 
+46 - N/A 
+47 - Silver Wing 
+48 - MooMoo Milk 
+49 - Quick Claw 
+4A - Poison Cure Berry 
+4B - Gold Leaf 
+4C - Soft Sand 
+4D - Sharp Beak 
+4E - Paralyze Cure Berry 
+4F - Burnt Berry 
+50 - Ice Berry 
+51 - Poison Barb 
+52 - King's Rock 
+53 - Bitter Berry 
+54 - Mint Berry 
+55 - Red Apricorn 
+56 - Tiny Mushroom 
+57 - Big Mushroom 
+58 - Silver Powder 
+59 - Blue Apricorn 
+5A - N/A 
+5B - Amulet Coin 
+5C - Yellow Apricorn 
+5D - Green Apricorn 
+5E - Cleanse Tag 
+5F - Mystic Water 
+60 - Twisted Spoon 
+61 - White Apricorn 
+62 - Black Belt 
+63 - Black Apricorn 
+64 - N/A 
+65 - Pink Apricorn
+66 - Black Glasses 
+67 - Slowpoke Tail 
+68 - Pink Bow 
+69 - Stick 
+6A - Smoke Ball 
+6B - Never - Melt Ice 
+6C - Magnet 
+6D - Miracle Berry 
+6E - Pearl 
+6F - Big Pearl 
+70 - EverStone 
+71 - Spell Tag 
+72 - Rage Candy Bar 
+73 - N/A 
+74 - N/A 
+75 - Miracle seed 
+76 - Thick Club 
+77 - Focus Band 
+78 - N/A 
+79 - Energy Powder 
+7A - Energy Root 
+7B - Heal Powder 
+7C - Revival Herb 
+7D - Hard Stone 
+7E - Lucky Egg 
+7F - Card Key 
+80 - Machine Part 
+81 - N/A 
+82 - Lost Item 
+83 - Star Dust 
+84 - Star Piece 
+85 - Basement key 
+86 - Pass 
+87 - N/A 
+88 - N/A 
+89 - N/A 
+8A - Charcoal 
+8B - Berry Juice 
+8C - Scope Lens 
+8D - N/A 
+8E - N/A 
+8F - Metal Coat 
+90 - Dragon Fang 
+91 - N/A 
+92 - LeftOvers 
+93 - N/A 
+94 - N/A 
+95 - N/A 
+96 - Mystery Berry 
+97 - Dragon scale 
+98 - Berserk Gene 
+99 - N/A 
+9A - N/A 
+9B - N/A 
+9C - Sacred Ash 
+9D - Heavy Ball 
+9E - Flower Mail 
+9F - Level Ball 
+A0 - Lure Ball 
+A1 - Fast Ball 
+A2 - N/A 
+A3 - Light Ball 
+A4 - Friend Ball 
+A5 - Moon Ball 
+A6 - Love Ball 
+A7 - Normal Box 
+A8 - Gorgeous Box 
+A9 - Sun Stone 
+AA - Polkadot Bow 
+AB - N/A 
+AC - Up - Grade 
+AD - Berry 
+AE - Gold Berry 
+AF - Squirt Bottle 
+B0 - N/A 
+B1 - Park Ball 
+B2 - Rainbow Wing 
+B3 - N/A 
+B4 - Brick Piece 
+B5 - Surf Mail 
+B6 - Lite Blue Mail 
+B7 - Portrait Mail 
+B8 - Lovely Mail 
+B9 - Eon Mail 
+BA - Morph Mail 
+BB - Blue Sky Mail 
+BC - Music Mail 
+BD - Mirage Mail 
+BE - N/A 
+BF - TM 1 - Dynamic Punch 
+C0 - TM 2 - Headbutt 
+C1 - TM 3 - Curse 
+C2 - TM 4 - Rollout 
+C3 - TM 4 - Rollout (not a typo. It shows up twice.) 
+C4 - TM 5 - Roar 
+C5 - TM 6 - Toxic 
+C6 - TM 7 - Zap Cannon 
+C7 - TM 8 - Rock Smash 
+C8 - TM 9 - Psych Up 
+C9 - TM 10 - Hidden Power 
+CA - TM 11 - Sunny Day 
+CB - TM 12 - Sweet Scent 
+CC - TM 13 - Snore 
+CD - TM 14 - Blizzard 
+CE - TM 15 - Hyper Beam 
+CF - TM 16 - Icy Wind 
+D0 - TM 17 - Protect 
+D1 - TM 18 - Rain Dance 
+D2 - TM 19 - Giga Drain 
+D3 - TM 20 - Endure 
+D4 - TM 21 - Frustration 
+D5 - TM 22 - Solar Beam 
+D6 - TM 23 - Iron Tail 
+D7 - TM 24 - Dragon Breath 
+D8 - TM 25 - Thunder 
+D9 - TM 26 - Earthquake 
+DA - TM 27 - Return 
+DB - TM 28 - Dig 
+DC - TM 28 - Dig (not a typo. It shows up twice.) 
+DD - TM 29 - Psychic 
+DE - TM 30 - Shadow Ball 
+DF - TM 31 - Mud - Slap 
+E0 - TM 32 - Double Team 
+E1 - TM 33 - Ice Punch 
+E2 - TM 34 - Swagger 
+E3 - TM 35 - Sleep Talk 
+E4 - TM 36 - Sludge Bomb 
+E5 - TM 37 - Sand Storm 
+E6 - TM 38 - Fire Blast 
+E7 - TM 39 - Swift 
+E8 - TM 40 - Defense Curl 
+E9 - TM 41 - Thunder Punch 
+EA - TM 42 - Dream Eater 
+EB - TM 43 - Detect 
+EC - TM 44 - Rest 
+ED - TM 45 - Attract 
+EE - TM 46 - Thief 
+EF - TM 47 - Steel Wing 
+F0 - TM 48 - Fire Punch 
+F1 - TM 49 - Fury Cutter 
+F2 - TM 50 - Nightmare 
+F3 - HM 1 - Cut 
+F4 - HM 2 - Fly 
+F5 - HM 3 - Surf 
+F6 - HM 4 - Strength 
+F7 - HM 5 - Flash 
+F8 - HM 6 - Whirlpool 
+F9 - HM 7 - Waterfall 
+FF - Nothing 
+
+	That is a far longer list for GSC. Now that you have the hex codes, we need a hex address. In RBY go to 2443. That is the first store. I do not have the address for GSC at this time, but use the hex codes to find the items by searching for them in order. You cannot add more items to a store.
+
+8¥¥: How do I edit a pokemon's stats?
+*****************************
+	This is the hardest part of hacking these games, as there are 151/251 of these entries to hack. They do not use any special lists for the most part, just the value of the hex code. They are very similiar, so pay attention. The format is as follows for RBY:
+
+27 bytes total:
+# : Effect  on pokemon
+1st: pokemon number
+2nd: HP rating 0-255 higher is better
+3rd:ATK rating 0-255
+4th:DEF " "
+5th: SPEED
+6th: SPECIAL
+7th: Type ##1
+8th: Type ##2
+9th: Rarity factor 0-255, higher is rarer
+10th: EXP factor, 0-255, higher is more points
+1th: Picture size? (not completely sure how this affects the picture)
+12, 13: Pointer value for picture facing you (enemy)
+14, 15: pointer value for picture facing enemy (your pokemon)
+16-19: attacks known at level 1
+20-27: Which HM's and TM's the pokemon learns. (probably 64 binary switches in order)
+
+GSC is similiar, but with extra bytes:
+
+32 bytes total: most guessed from RBY
+# : Effect on pokemon
+1st: pokemon number
+2nd: HP rating 0-255 higher is better
+3rd:ATK rating 0-255
+4th:DEF " "
+5th: SPEED " "
+6th: SPECIAL ATK " "
+7th: SPECIAL DEF " "
+8th: Type ##1
+9th: Type ##2
+10th: Rarity factor 0-255, higher is rarer
+11th: EXP factor, 0-255, higher is more points
+12th: Picture size? (not completely sure how this affects the picture)
+13, 14: Pointer value for picture facing you (enemy)
+15, 16: pointer value for picture facing enemy (your pokemon)
+17-19: attacks known at level 1
+21-28: Which HM's and TM's the pokemon learns. (probably 64 binary switches in order)
+29-32: ????
+
+The GSC format is nice is Hexposure, as it fills 2 rows neatly. They start at 230366 in RBY and 051B0C in GSC. I personally would balance the strong and weak, as well as mix them all around, and give one FF's in every category, but make it one that was less obvious than, say, Mewtwo.
+
+9¥¥: How do I edit a trainer's name and type?
+***********************************
+	This one applies mostly to GSC. Just search for the trainer's name in text and type over it with a name that fits in the same space. In GSC the name starts after FF and has 2 bytes after it before their pokemon data starts. I cannot seem to find the bytes that control a trainer's type. Not a major loss.
+
+10¥: How do I edit palettes and graphics?
+********************************
+	First the easier question: you cannot edit pokemon graphics. Get over it. You can edit sprites and backgrounds, but not pokemon. Now for palettes. I only have info for RBY, and since GSC are fully GBC, they are probably a lot different. But, the palettes in SGB are 2 bytes long. In RB, the start address for palettes is 72668. Yellow's is 729C1 is SGB mode, not GBC mode.
+
+11¥: How do I edit techniques?
+************************
+	This is not as hard as it sounds. The format is similiar in all the games, just a few more effects were added in GSC. The first bit is the move number in hex, and that is used to look up moves by the game. Next byte is for the effect the attack has. This varies a lot, as several attacks have one special effect. Third byte is the type of the attack, same as the pokemon type in hex value. Forth byte is the hit ratio byte. Take the value, and divide by FF in a hex calculator to find the hit percentage (ignore any decimal points).  Fifth and last is power points. The value is the number of PP. That's it and the next byte is the next technique! For completeness' sake, here is a list of all the moves in GSC and their hex codes so you know what you're changing. RBY codes follow.
+
+00 - Nothing
+01 - Pound
+02 - Karate Chop
+03 - Double Slap
+04 - Comet Punch
+05 - Mega Punch
+06 - Pay Day
+07 - Fire Punch
+08 - Ice Punch
+09 - Thunder Punch
+0A - Scratch
+0B - Vice Grip
+0C - Guillotine
+0D - Razor Wind
+0E - Swords Dance
+0F - Cut
+10 - Gust
+11 - Wing Attack
+12 - Whirl Wind
+13 - Fly
+14 - Bird
+15 - Slam
+16 - Vine Whip
+17 - Stomp
+18 - Double Kick
+19 - Mega Kick
+1A - Jump Kick
+1B - Rolling Kick
+1C - Sand Attack
+1D - Head Butt
+1E - Horn Attack
+1F - Fury Attack
+20 - Horn Drill
+21 - Tackle
+22 - Body Slam
+23 - Wrap
+24 - Take Down
+25 - Thrash
+26 - Double Edge
+27 - Tail Whip
+28 - Poison Sting
+29 - Twin Edle
+2A - Pin Missile
+2B - Leer
+2C - Bite
+2D - Growl
+2E - Roar
+2F - Sing
+30 - Supersonic
+31 - Sonicboom
+32 - Disable
+33 - Acid
+34 - Ember
+35 - Flamethrower
+36 - Mist
+37 - Water Gun
+38 - Hydro Pump
+39 - Surf
+3A - Ice Beam
+3B - Blizzard
+3C - Psybeam
+3D - Bubblebeam
+3E - Aurora Beam
+3F - Hyper Beam
+40 - Peck
+41 - Drill Peck
+42 - Submission
+43 - Low Kick
+44 - Counter
+45 - Seismic Toss
+46 - Strength
+47 - Absorb
+48 - Mega Drain
+49 - Leech Seed
+4A - Growth
+4B - Razor Leaf
+4C - Solar Beam
+4D - Poisonpowder
+4E - Stun Spore
+4F - Sleep Powder
+50 - Petal Dance
+51 - String Shot
+52 - Dragon Rage
+53 - Fire Spin
+54 - Thundershock
+55 - Thunderbolt
+56 - Thunder Wave
+57 - Thunder
+58 - Rock Throw
+59 - Earthquake
+5A - Fissure
+5B - Dig
+5C - Toxic
+5D - Confusion
+5E - Psychic
+5F - Hypnosis
+60 - Meditate
+61 - Agility
+62 - Quick Attack
+63 - Rage
+64 - Teleport
+65 - Night Shade
+66 - Mimic
+67 - Screech
+68 - Double Team
+69 - Recover
+6A - Harden
+6B - Minimize
+6C - Smoke Screen
+6D - Confuse Ray
+6E - Withdraw
+6F - Defense Curl
+70 - Barrier
+71 - Light Screen
+72 - Haze
+73 - Reflect
+74 - Focus Energy
+75 - Hide
+76 - Metronome
+77 - Mirror Move
+78 - Selfdestruct
+79 - Egg Bomb
+7A - Lick
+7B - Smog
+7C - Sludge
+7D - Bone Club
+7E - Fire Blast
+7F - Waterfall
+80 - Clamp
+81 - Swift
+82 - Skull Bash
+83 - Spike Cannon
+84 - Constrict
+85 - Amnesia
+86 - Kinesis
+87 - Softboiled
+88 - Hi Jump Kick
+89 - Glare
+8A - Dream Eater
+8B - Poison Gas
+8C - Barrage
+8D - Leech Life
+8E - Lovely Kiss
+8F - Sky Attack
+90 - Transform
+91 - Bubble
+92 - Dizzy Punch
+93 - Spore
+94 - Flash
+95 - Psywave
+96 - Splash
+97 - Acid Armor
+98 - Crabhammer
+99 - Exposion
+9A - Fury Swipes
+9B - Bonemerang
+9C - Rest
+9D - Rock Slide
+9E - Hyper Fang
+9F - Sharpen
+A0 - Conversion
+A1 - Tri Attack
+A2 - Super Fang
+A3 - Slash
+A4 - Substitute
+A5 - Struggle
+A6 - Sketch
+A7 - Triple Kick
+A8 - Thief
+A9 - Spider Web
+AA - Mind Reader
+AB - Nightmare
+AC - Flame Wheel
+AD - Snore
+AE - Curse
+AF - Flail
+B0 - Conversion2
+B1 - Aeroblast
+B2 - Cotton Spore
+B3 - Reversal
+B4 - Spite
+B5 - Powder Snow
+B6 - Protect
+B7 - Mach Punch
+B8 - Scary Face
+B9 - Faint Attack
+BA - Sweet Kiss
+BB - Belly Drum
+BC - Sludge Bomb
+BD - Mud - Slap
+BE - Octazooka
+BF - Spikes
+C0 - Zap Cannon
+C1 - Foresight
+C2 - Destiny Bond
+C3 - Perish Song
+C4 - Icy Wind
+C5 - Detect
+C6 - Bone Rush
+C7 - Lock - On
+C8 - Outrage
+C9 - Sandstorm
+CA - Giga Drain
+CB - Endure
+CC - Charm
+CD - Rollout
+CE - False Swipe
+CF - Swagger
+D0 - Milk Drink
+D1 - Spark
+D2 - Fury Cutter
+D3 - Steel Wing
+D4 - Mean Look
+D5 - Attract
+D6 - Sleep Talk
+D7 - Heal Bell
+D8 - Return
+D9 - Present
+DA - Frustration
+DB - Safeguard
+DC - Pain Split
+DD - Sacred Fire
+DE - Magnitude
+DF - Dynamicpunch
+E0 - Megahorn
+E1 - Dragonbreath
+E2 - Baton Pass
+E3 - Encore
+E4 - Pursuit
+E5 - Rapid Spin
+E6 - Sweet Scent
+E7 - Iron Tail
+E8 - Metal Claw
+E9 - Vital Throw
+EA - Morning Sun
+EB - Synthesis
+EC - Moonlight
+ED - Hidden Power
+EE - Cross Chop
+EF - Twister
+F0 - Rain Dance
+F1 - Sunny Day
+F2 - Crunch
+F3 - Mirror Coat
+F4 - Psych Up
+F5 - Extremespeed
+F6 - Ancientpower
+F7 - Shadow Ball
+F8 - Future Sight
+F9 - Rock Smash
+FA - Whirlpool
+FB - Beat Up
+
+Here are the RBY technique hex codes:
+
+01 Pound
+02 Karate Chop
+03 Double Slap
+04 Comet Punch
+05 Mega Punch
+06 Pay Day
+07 Fire Punch
+08 Ice Punch
+09 Thunder Punch 
+10 Gust
+11 Wing Attack
+12 Whirlwind
+13 Fly
+14 Bind
+15 Slam
+16 Vine Whip
+17 Stomp
+18 Double Kick
+19 Mega KIck
+1A Jump KIck
+1B RollingKick
+1C Sand Attack
+1D Headbutt
+1E Horn Attack
+1F Fury Attack
+20 Horn Drill
+21 Tackle
+22 Bodyslam
+23 Wrap
+24 Take Down 
+25 Trash
+26 Double Edge
+27 Tail Whip
+28 Poison Sting
+29 Twin Needle
+2A Pin Missle
+2B Leer
+2C Bite
+2D Growl
+2E Roar
+2F SuperSonic
+30 Sonic Boom
+31 -
+32 Disable
+33 Acid
+34 Ember
+35 FlameThrower
+36 Mist
+37 Water Gun
+38 Hydro Pump
+39 Surf
+3A Ice Beam
+3B Blizzard
+3C PsyBeam
+3D Bubble Beam
+3E Aurora Beam
+3F Hyper Beam
+40 Peck
+41 Drill Peck
+42 Submission
+43 Low Kick
+44 Counter
+45 Sesmic Toss
+46 Strength
+47 Absorb
+48 Mega Drain
+49 Leech Seed
+4A Growth
+4B Razor Wind
+4C Solar Beam
+4D Poison Powder
+4E Stun Spore
+4F Sleep Powder
+50 Petal Dance
+51 String Shot
+52 Dragon Rage
+53 Fire Spin
+54 ThunderShock
+55 ThunderBolt
+56 ThunderWave
+57 Thunder
+58 Rock Throw
+59 EarthQuake
+5A Fissure
+5B Dig
+5C Toxic
+5D Confusion
+5E Psychic
+5F Hypnosis
+60 Meditate
+61 Agility
+62 Quick Attack
+63 Rage
+64 Teleport
+65 Night Shade
+66 Mimic
+67 Screech
+68 Double Team
+69 Recover
+6A Harden
+6B Minimized
+6C Smoke Screen
+6D Confuse Ray
+6E WithDraw
+6F Defence Curl
+70 Barrier
+71 Light screen
+72 Haze
+73 Reflect
+74 Focus
+75 Bide
+76 Metronome
+77 Mirror Move
+78 Self Destruct
+79 Egg Bomb
+7A Lick
+7B Smog
+7C Sludge
+7D Bone Club
+7E Fire Blast
+7F Waterfall
+80 Clamp
+81 Swift
+82 Skull Bash
+83 Spike Cannon
+84 Constrict
+85 Amnesia
+86 Kinesis
+87 Softboiled
+88 Hi-Jump Kick
+89 Glare
+8A Dream Eater
+8B Poison Gas
+8C Barrage
+8D Leech Life
+8E Lovely Kiss
+8F Sky Attack
+90 Transform
+91 Bubble
+92 Dizzy Punch
+93 Spore
+94 Flash
+95 Psywave
+96 Splash
+97 Screech
+98 Double Team
+99 Explosion
+9A Fury Swipe
+9B Bonemerang
+9C Rest
+9D Rock Slide
+9E Hyper Fang
+9F Sharpen
+A0 Conversion
+A1Tri Attack
+A2 Super Fang
+A3 Slash
+A4 Substitute
+A5 Struggle
+
+12¥: How do I edit evolutions?
+***********************
+	This is also mostly for RBY, but searching for the moves a pokemon learns in order by hex will reveal right before that data the data for evolution. The format is as follows:
+AABBCCDD 
+AA: type of evolution (00:level 01:level again 02:special stone 03:trade)
+BB: type of stone (10:none 01:moon 20:fire 21:thunder 22:water 2F:leaf)
+CC: level of evolution (in hex, remember)
+DD: pokemon to evolve into
+	In RBY, the evolutions start in the general vicinity of 3B939, and the pokemon's moves that can be learned and when they are learned are right before the evolution data, and (say it with me now) be careful.
+	The GSC evolutions look like this (taken straight from another doc, can't remember where I got it and its unmarked):
+// EVOLUTION FORMAT //
+
+<type of evo> <parameter> 			<evolves to>
+01(Level)     20(lvl in hex)			hexpoke#
+02(Item)      xx(gsitem#, must be able to use)	hexpoke#
+03(Trade)     xx(gsitem# or 00 for none)	hexpoke#
+04(Happy)     xx(any - 01; day - 02; nite - 03)	hexpoke#
+
+02 16 05     02 18 09     00 
+|  |  |      |  |  |      |  
+|  |  |      |  |  |      |____ end of evo
+|  |  |      |  |  |
+|  |  |      |  |  |___________ evolved to
+|  |  |      |  |______________ item to use
+|  |  |      |_________________ type of evol
+|  |  |
+|  |  |________________________ evolve to
+|  |___________________________ item to use
+|______________________________ type of evo
+
+
+TYPE 5 EVOLUTION
+
+PARAMETERS
+¯¯¯¯¯¯¯¯¯¯
+05 14 02 6B
+|  |  |  |_ Poke to evolve to
+|  |  |____ Atk <=> Def Condition	(01, 02 or 03)
+|  |_______ Level to decide
+|__________ Type of evoltuion 		(always 05)
+
+01 Atk < Def then Evolve to #106
+02 Atk > Def then Evolve to #107
+03 Atk = Def then Evolve to #237
+
+
+13¥: How do I edit the maps?
+**********************
+	You could learn all the different tilesets, and look up the tiles in a hex editor and change them, but that could take years. So instead, I reccomend downloading Goldmap. It is a utility that does some of the stuff mentioned here and edits the maps. I do not have a link for it. It is made by Jigglypuff, and they have no web site. Search for it long enough, and you'll find it.
+
+14¥: I found something not listed here. What do I do?
+*****************************************
+	Well, first make sure it does what you think it does. Then, email a message accurately and completely detailing what is is, where it is, what is does, and in which games it works. I will give you credit and check to make sure it works in the game you said and the other games, since they are so simliar.
+
+15¥: HeYyy D00d, GivE I ThaA R00mZZzZ!
+*********************************
+	No. Don't even send this kind of letter to me at all. It does not irritate me as bad as it does anyone else (I know your reasons for sending them, lamers) and I never respond, sometimes refered to as "feeding trolls". You can find the ROM yourself awfully faster by going to any search engine. If you would have sent a message similiar to the one above, type in "gay preteen butt sex". If you would just ask me outright without using intentional miscapitaliztion, type in "pokemon roms".
+
+16¥:Where can I find the ROM?
+************************
+	I just answered that above, if you actually have read the whole document. But, if you get the ROM from a site that has a massive number of ROMs for many systems, please click on the banner ads. It helps the whole community when one site stays up. Speaking of the community, I'm going to go on a short rant, so if you're not interested, just scroll past. Too late now. Despite what people say, there is no such thing as a pirate with morals. The people who would actually download only the ROMs they own would probably never download ROMs since they say you don't need a backup. So there are only 2 kinds of people who use ROMs:
+1) those who download ROMs from sites and use them
+2)lamerz who beg for them to be emailed or through a chatroom (both obvious signs of newbie-dom) and never play them, just keeping them to annoy Nintendo and break the law and get away with it
+Noone likes type 2. About 10% of us are type 2, but they are about 50% of those who speak occasionally on the net. Too few experienced and intelligent people use the net for interpersonal purposes. I occasionally can be found on a forum at Pgamers.net, and some boards are so clogged with spap and trolls it's not worth viewing them, but at least most of those are marked with titles that would tell intelligent people they are full of fanboy debates by 11-year olds who spell worse than that. Thank goodness we can choose our handles, so we can tell that "HakeRMann123" is nowhere near as interesting intelluctually as "Giegue" or "Zophar" or "MrBubbles". Most good people manage to find a handle without weird capitalizations or numbers after it. If we were all assigned number, who would know if "18390349" was a lamer or Einstein's resurrected brain? Noone. OK, I'm done.
+
+17¥: OK, I know how to edit the data, where is it?
+*************************************
+	I should have put all the hex addresses at the appropriate place, but if you can't find it look here.
+RBY Starting Addresses
+Stores:		2443
+Wild Pokemon	D0E0
+Techniques:	038000
+Trainer Pokemon	03A3B6
+Evolutions:	3B939
+Palettes:		RB: 72668	Yellow: 729C1
+Pokedex:		41025
+Pokemon stats:	383DE
+
+GSC Starting Addresses:
+Trainer names:	1B0917
+Pokedex:		1A0006
+Techniques:	41AFE
+Wild Pokemon:	2B3EB
+Pokemon stats:	51B0C
+
+18¥: More info and opinions
+**********************
+	Many rumors float around the net about Pokerus, a rare condition. It makes pokemon need 2X experience to go up a level, but it makes them stronger when they do. It spreads quickly from one boxed pokemon to another, and through the party as well. It can be cured by leaving the pokemon in your party for a full day. I can prove its existance with the table for GSC. Load it up and go to addresses 100766 and 105485. They show the reaction of the Pokecenter and Prof. Elm when asked about it. I do not know how to get it, and pokemon seem to become immune after they get it once.
+
+	I think that pokemon is a good game, but just too easy. It is a kid's game supposedly, but it should offer somesort of challenge to those of us who actually use all 6 pokemon instead of just the one we got at the beginning of the game like many people. 
+
+	If you would like to do this stuff and save yourself some time, try downloading some utilities. There are Goldmap (map editor and wild pokemon editor) and Pokechu (Edits starting pokemon! not covered in this doc yet!). They can help and speed things up, but dont rely 100% on Goldmap for wild pokemon. 
+
+	You can contact me at giegue@excite.com. My AIM name is neogiegue. Please visit my web site at http://www.angelfire.com/oh4/giegue/. Let me know if this document helps you. Do not email me for roms, clarification, general use of a hex editor, table conversion, etc. I will not answer you. You should be able to figure this all out by yourself. I could be persuaded to help with a hack if you so desire my help. I did not offer the tables for Green and the partially translated versions because they are a waste of time and inferior to the official releases. Pokemon Diamond and Ruby are not true pokemon games, as you would know if you looked up any information on them. 
+****************************************************************************************************************************************************************************
+Thanks to the following people and groups:
+Brad Levicoff, Sam Michales, Angelfire, Peacefire, Excite, Pocket Gamers Network, Myself, MrBubbles, everyone who downloaded my Crawling NES demo, whoever made the NSF format, and so on...
+
+No thanks to:
+DEATH ADDER, your mom, my mom, someone else's mom, no one's mom, the guy who invented the your mom joke, every lamer there is, anyone who begs for roms despite specific instructions not to (that goes double for those who keep putting Kojote's Freeware ROM Archive out of comission), and anyone who doesn't read this part of the document, anyone who wears purple sweatpants on Tuesdays in February during a blue moon, and so forth.....
+
+2001 Giegue One Man Hacking, Inc.
+Email: giegue@excite.com
+http://www.angelfire.com/oh4/giegue/
+
+Version 1.0:
+Introductory Release:
+-Found out I didn't convert all the pointers to hex, some are still in regular numbers. I don't have time to change before I upload this, next version I will. 
+-Probably missing some pointers for data
+-Plan to find out the rest of the bytes in the next release for the GSC pokemon data.
