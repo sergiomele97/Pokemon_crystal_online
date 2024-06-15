@@ -1,0 +1,2 @@
+La vram no tiene sprites, tiene punteros a la posición de los tiles que usa.
+La posición de los tiles varía dependiendo de donde esta el personaje.
