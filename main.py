@@ -5,3 +5,4 @@ with open("Pruebas/state_file.state", "rb") as f:
 while pyboy.tick():
     pass
 pyboy.stop()
+print("Hola")
