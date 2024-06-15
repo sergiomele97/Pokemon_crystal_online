@@ -1,0 +1,15 @@
+1. Realizar cambios deseados en los archivos
+
+2. Compilst proyecto (movida, hay que instalar bastantes cosas siguiendo la guia de la documentación)
+Solo funciona en el bash (tengo el de git instalado, uso ese)
+A veces llama a python como python y otras como python3 (tengo los dos exes en path)
+Solo funciona en el proyecto clonado en visual studio.
+Hay que ir a la carpeta del proyecto (ojo / en bash en vez de \)
+ejecutar make build
+
+3. Abrir terminal del env o donde estes
+desinstalar pyboy si lo tiene sinstalado (pip uninstall pyboy)
+pip instal pyboy -e //ruta local a la carpeta del proyecto (hay un archivo llamado setup.py) //
+
+
+
