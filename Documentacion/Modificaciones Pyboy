@@ -1,0 +1,6 @@
+Para obtener una ventana headless con fram rater:
+Se han modificado los archivos base_plugin.py y window_null.py
+(en ambos se importa time)
+y en el primero se copia la funcion fram limiter de OpenCV
+
+Necesito conseguir poner el atributo _ftime en la clase window null
