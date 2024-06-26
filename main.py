@@ -71,9 +71,15 @@ def update_background():
     sdl_surface = sdl2.SDL_CreateRGBSurfaceFrom(image_bytes, width, height, 32, width * 4, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000)
     # 4. Creates texture from surface
     texture = sdl2.SDL_CreateTextureFromSurface(renderer.sdlrenderer, sdl_surface)
+
+    # Load the sprite (assuming you have a transparent PNG)
+    sprite_factory = sdl2.ext.SpriteFactory(sdl2.ext.TEXTURE, renderer=renderer)
+    sprite = sprite_factory.from_image("Resources/mainOW.bmp")
     # 5. Render
     renderer.clear()
-    sdl2.SDL_RenderCopy(renderer.sdlrenderer, texture, None, None)
+
+    sdl2.SDL_RenderCopy(renderer.sdlrenderer, texture, None, None)  # Fondo
+    renderer.copy(sprite, srcrect=(0, 0, 16, 16), dstrect=(100, 100, 16, 16))   # Sprite y rectangulo animacion
     renderer.present()
 
 
