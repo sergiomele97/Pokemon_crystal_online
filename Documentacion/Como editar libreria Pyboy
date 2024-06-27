@@ -13,5 +13,4 @@ pip instal pyboy -e //ruta local a la carpeta del proyecto (hay un archivo llama
 
 
 
- ¡! Para añadir una variable al codigo de python hay que añadirla tambien en el archivo .c
-y en el de cpython .pdx o algo asi
+ ¡! Para añadir una variable al codigo de python hay que añadirla tambien en el archivo de cpython .pdx o algo asi

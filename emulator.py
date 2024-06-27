@@ -44,8 +44,17 @@ class Emulator:
         sdl2.SDLK_SPACE: WindowEvent.RELEASE_SPEED_UP,
     }
 
-    # ------------------------ CONTROLS
+    # ------------------------ PLAYER
     player = Player()
+
+    player2 = Player()
+    player2.map_bank = 24
+    player2.map_number = 4
+    player2.x_coord = 9
+    player2.y_coord = 7
+
+    lista = [None] * 60000
+
 
     def __init__(self):
         print("Constructor")
@@ -74,8 +83,22 @@ class Emulator:
         # 1. Load the sprite (assuming you have a transparent BMP)
         sprite_factory = sdl2.ext.SpriteFactory(sdl2.ext.TEXTURE, renderer=self.renderer)
         sprite = sprite_factory.from_image("Resources/mainOW.bmp")
+
+        # Debug emular player
+        #   x_draw = (x jugador2 - x jugador1 + cuadrados hasya centro pantalla) * pixeles/cuadrado
+
+        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80
+        y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
+
+        for i in range(59999):
+            if self.lista[i] != self.pyboy.memory[i] and self.lista[i] != 0:
+                print("Cambio en memoria posición ", i, ": ", self.lista[i],  "a", self.pyboy.memory[i])
+                self.lista[i] = self.pyboy.memory[i]
+            else: self.lista[i] = 0
+
+
         # 2. Render
-        self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(0, 0, 80, 80))  # Sprite y rectangulo animacion
+        self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(x_draw, y_draw, 80, 80))  # Sprite y rectangulo animacion
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
@@ -98,9 +121,14 @@ class Emulator:
                 running = False
                 break
             elif event.type == sdl2.SDL_KEYDOWN:
-                self.pyboy.send_input(self.KEY_DOWN[event.key.keysym.sym])   # pyboy-sdl2 key interface
+                input_value = self.KEY_DOWN.get(event.key.keysym.sym, None)   # pyboy-sdl2 key interface
+                if input_value:
+                    self.pyboy.send_input(input_value)
             elif event.type == sdl2.SDL_KEYUP:
-                self.pyboy.send_input(self.KEY_UP[event.key.keysym.sym])
+                input_value = self.KEY_UP.get(event.key.keysym.sym, None)
+                if input_value:
+                    self.pyboy.send_input(input_value)
+
         return running
 
     def open_state(self):
@@ -114,6 +142,15 @@ class Emulator:
             self.pyboy.save_state(f)
 
     def get_player_coords(self):
-        self.player.x_coord = self.pyboy.memory[0xDCB7]
-        self.player.y_coord = self.pyboy.memory[0xDCB8]
+        self.player.x_coord = self.pyboy.memory[0xDCB8]
+        self.player.y_coord = self.pyboy.memory[0xDCB7]
+        self.player.map_number = self.pyboy.memory[0xDCB6]
+        self.player.map_bank = self.pyboy.memory[0xDCB5]
+        print("")
         print(self.player.x_coord)
+        print(self.player.y_coord)
+        print("map bank = ", self.pyboy.memory[0xDCB5])
+        print("map number = ", self.pyboy.memory[0xDCB6])
+
+
+
