@@ -49,6 +49,7 @@ class Emulator:
     def run(self):
 
         self.window.show()
+        self.open_state()
         running = True
 
         while running:
@@ -87,6 +88,7 @@ class Emulator:
         events = sdl2.ext.get_events()
         for event in events:
             if event.type == sdl2.SDL_QUIT:
+                self.save_state()          # Guarda estado emulador
                 running = False
                 break
             elif event.type == sdl2.SDL_KEYDOWN:
@@ -94,3 +96,13 @@ class Emulator:
             elif event.type == sdl2.SDL_KEYUP:
                 self.pyboy.send_input(self.KEY_UP[event.key.keysym.sym])
         return running
+
+    def open_state(self):
+        # Load file
+        with open("States/state_file.state", "rb") as f:
+            self.pyboy.load_state(f)
+
+    def save_state(self):
+        # Save to file
+        with open("States/state_file.state", "wb") as f:
+            self.pyboy.save_state(f)
