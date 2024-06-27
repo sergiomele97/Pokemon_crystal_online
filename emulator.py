@@ -1,7 +1,9 @@
 from pyboy import PyBoy
 from pyboy.utils import WindowEvent
+from player import Player
 import sdl2
 import sdl2.ext
+
 
 
 class Emulator:
@@ -42,6 +44,9 @@ class Emulator:
         sdl2.SDLK_SPACE: WindowEvent.RELEASE_SPEED_UP,
     }
 
+    # ------------------------ CONTROLS
+    player = Player()
+
     def __init__(self):
         print("Constructor")
 
@@ -54,6 +59,7 @@ class Emulator:
 
         while running:
             self.pyboy.tick()
+            self.get_player_coords()
             running = self.handle_events(running)
             self.update_screen()
             self.window.refresh()
@@ -106,3 +112,8 @@ class Emulator:
         # Save to file
         with open("States/state_file.state", "wb") as f:
             self.pyboy.save_state(f)
+
+    def get_player_coords(self):
+        self.player.x_coord = self.pyboy.memory[0xDCB7]
+        self.player.y_coord = self.pyboy.memory[0xDCB8]
+        print(self.player.x_coord)
