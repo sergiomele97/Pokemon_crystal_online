@@ -1,0 +1,6 @@
+cuadrados = 10x 9y
+
+X = 800
+Y = 720
+
+1 cuadrado = 80px x 80px
