@@ -1,0 +1,4 @@
+Haciendo pruebas he encontrado que la zona de la ram donde se muestra de forma
+mas precisa la posicion del sprite del protagonista es:
+print(self.pyboy.memory[0xD14C])    # sprite X
+print(self.pyboy.memory[0xD14D])    # sprite Y

@@ -53,7 +53,6 @@ class Emulator:
     player2.x_coord = 9
     player2.y_coord = 7
 
-    lista = [None] * 60000
 
 
     def __init__(self):
@@ -90,15 +89,9 @@ class Emulator:
         x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80
         y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
 
-        for i in range(59999):
-            if self.lista[i] != self.pyboy.memory[i] and self.lista[i] != 0:
-                print("Cambio en memoria posición ", i, ": ", self.lista[i],  "a", self.pyboy.memory[i])
-                self.lista[i] = self.pyboy.memory[i]
-            else: self.lista[i] = 0
-
-
         # 2. Render
         self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(x_draw, y_draw, 80, 80))  # Sprite y rectangulo animacion
+
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
@@ -146,7 +139,10 @@ class Emulator:
         self.player.y_coord = self.pyboy.memory[0xDCB7]
         self.player.map_number = self.pyboy.memory[0xDCB6]
         self.player.map_bank = self.pyboy.memory[0xDCB5]
+
         print("")
+        print(self.pyboy.memory[0xD14C])    # sprite X
+        print(self.pyboy.memory[0xD14D])    # sprite Y
         print(self.player.x_coord)
         print(self.player.y_coord)
         print("map bank = ", self.pyboy.memory[0xDCB5])
