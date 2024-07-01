@@ -87,11 +87,14 @@ class Emulator:
 
         # Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
 
+        if self.player.isPlayerMoving() and self.player.direction == "None":
+            self.player.direction = self.player.getPlayerDirection()
 
+        x_moving_correction = (self.player.x_coord_sprite[0] - self.player.x_coord_sprite[4]) * 5
+        y_moving_correction = 0
 
         #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
-
-        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80
+        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + x_moving_correction
         y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
 
         # 2. Render
@@ -143,10 +146,13 @@ class Emulator:
     def get_player_coords(self):
         self.player.x_coord = self.pyboy.memory[0xDCB8]
         self.player.y_coord = self.pyboy.memory[0xDCB7]
-        self.player.x_coord_sprite = self.pyboy.memory[0xD14C]
-        self.player.y_coord_sprite = self.pyboy.memory[0xD14D]
+
         self.player.map_number = self.pyboy.memory[0xDCB6]
         self.player.map_bank = self.pyboy.memory[0xDCB5]
+
+        self.player.updateSpriteCoord()
+        self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
+        self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
 
         print("")
         print("sprite X = ", self.pyboy.memory[0xD14C])    # sprite X
