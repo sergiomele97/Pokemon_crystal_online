@@ -87,14 +87,31 @@ class Emulator:
 
         # Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
 
-        if self.player.isPlayerMoving() and self.player.direction == "None":
+        if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] > 0:
             self.player.direction = self.player.getPlayerDirection()
+            self.player.movingCycle = True
+            self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
+            print("Moving cycle ON")
 
-        x_moving_correction = (self.player.x_coord_sprite[0] - self.player.x_coord_sprite[4]) * 5
+        if self.player.movingCycle:
+            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[5]) == 16:
+                self.player.movingCycle = False
+                print("Moving cycle OFF")
+                self.player.x_moving_correction = 0
+            else:
+                self.player.x_moving_correction = (self.player.x_coord_sprite[0] - self.player.x_coord_sprite[5]-2) * 5
+
+
+        print("")
+        print(self.player.x_coord_sprite[5])
+        print(self.player.x_coord_sprite[0])
+        print(self.player.x_moving_correction)
+        print("X", self.player.x_coord)
+
         y_moving_correction = 0
 
         #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
-        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + x_moving_correction
+        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
         y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
 
         # 2. Render
@@ -154,6 +171,7 @@ class Emulator:
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
 
+        '''
         print("")
         print("sprite X = ", self.pyboy.memory[0xD14C])    # sprite X
         print("sprite Y = ", self.pyboy.memory[0xD14D])    # sprite Y
@@ -161,6 +179,6 @@ class Emulator:
         print("player Y = ", self.player.y_coord)
         print("map bank = ", self.pyboy.memory[0xDCB5])
         print("map number = ", self.pyboy.memory[0xDCB6])
-
+        '''
 
 
