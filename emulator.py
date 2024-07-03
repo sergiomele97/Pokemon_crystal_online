@@ -66,8 +66,8 @@ class Emulator:
         running = True
 
         while running:
+            self.get_player_coords()    # Coords from last tick
             self.pyboy.tick()
-            self.get_player_coords()
             running = self.handle_events(running)
             self.update_screen()
             self.window.refresh()
@@ -94,12 +94,15 @@ class Emulator:
             print("Moving cycle ON")
 
         if self.player.movingCycle:
-            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[5]) == 16:
+            if self.player.movingCount > 13:
                 self.player.movingCycle = False
+                self.player.movingCount = 0
                 print("Moving cycle OFF")
                 self.player.x_moving_correction = 0
+
             else:
-                self.player.x_moving_correction = (self.player.x_coord_sprite[0] - self.player.x_coord_sprite[5]-2) * 5
+                self.player.updateMovingCorrection()
+                self.player.movingCount = self.player.movingCount + 1
 
 
         print("")
@@ -113,6 +116,11 @@ class Emulator:
         #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
         x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
         y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
+
+        print("draw")
+        print(x_draw)
+        print(y_draw)
+
 
         # 2. Render
         self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(x_draw, y_draw, 80, 80))  # Sprite y rectangulo animacion
