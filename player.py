@@ -11,12 +11,13 @@ class Player:
 
     # Pixel position from 3 ticks before being 0 the newest    EXPLAIN
     x_coord_sprite = [-1, -1, -1, -1, -1, -1]
-    y_coord_sprite = [-1, -1, -1, -1, -1 - 1]
+    y_coord_sprite = [-1, -1, -1, -1, -1, -1]
 
     direction = "None"
     movingCycle = False
     movingCount = 0
     x_moving_correction = 0
+    y_moving_correction = 0
 
     pixelCorrection = [10,10,20,20,30,30,40,40,50,50,60,60,-10,-10,0,0]
 
@@ -40,19 +41,24 @@ class Player:
     def getPlayerDirection(self):
         if self.x_coord_sprite[0] > self.x_coord_sprite[1]:
             return "left"
-        if self.x_coord_sprite[0] < self.x_coord_sprite[1]:
+        elif self.x_coord_sprite[0] < self.x_coord_sprite[1]:
             return "right"
-        if self.y_coord_sprite[0] > self.y_coord_sprite[1]:
+        elif self.y_coord_sprite[0] > self.y_coord_sprite[1]:
             return "up"
-        if self.y_coord_sprite[0] < self.y_coord_sprite[1]:
+        elif self.y_coord_sprite[0] < self.y_coord_sprite[1]:
             return "down"
 
     def updateMovingCorrection(self):
         if self.direction == "left":
             self.x_moving_correction = self.pixelCorrection[self.movingCount]
-        if self.direction == "right":
+        elif self.direction == "right":
             self.x_moving_correction = - self.pixelCorrection[self.movingCount]
+        elif self.direction == "up":
+            self.y_moving_correction = self.pixelCorrection[self.movingCount]
+        elif self.direction == "down":
+            self.y_moving_correction = - self.pixelCorrection[self.movingCount]
 
     def endOfMovingCycle(self):
         self.x_coord_sprite[5] = self.x_coord_sprite[0]
+        self.y_coord_sprite[5] = self.y_coord_sprite[0]
         self.movingCycle = False

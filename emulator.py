@@ -91,14 +91,17 @@ class Emulator:
             self.player.direction = self.player.getPlayerDirection()
             self.player.movingCycle = True
             self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
+            self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
             print("Moving cycle ON")
 
         if self.player.movingCycle:
             if self.player.movingCount > 13:
                 self.player.movingCycle = False
                 self.player.movingCount = 0
-                print("Moving cycle OFF")
                 self.player.x_moving_correction = 0
+                self.player.y_moving_correction = 0
+                print("Moving cycle OFF")
+
 
             else:
                 self.player.updateMovingCorrection()
@@ -111,11 +114,11 @@ class Emulator:
         print(self.player.x_moving_correction)
         print("X", self.player.x_coord)
 
-        y_moving_correction = 0
+
 
         #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
         x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
-        y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20
+        y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20 + self.player.y_moving_correction
 
         print("draw")
         print(x_draw)
