@@ -87,43 +87,37 @@ class Emulator:
 
         # Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
 
-        if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] > 0:
+        if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] >= 0:
             self.player.direction = self.player.getPlayerDirection()
             self.player.movingCycle = True
             self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
             self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
-            print("Moving cycle ON")
+            print("Moving cycle ON-----------------------------------")
 
         if self.player.movingCycle:
+            # End cycle
             if self.player.movingCount > 13:
-                self.player.movingCycle = False
-                self.player.movingCount = 0
-                self.player.x_moving_correction = 0
-                self.player.y_moving_correction = 0
-                print("Moving cycle OFF")
-
-
+                self.player.endOfMovingCycle()
+                # Not moving anymore so update coords
+                self.player.x_coord = self.pyboy.memory[0xDCB8]
+                self.player.y_coord = self.pyboy.memory[0xDCB7]
+            # Continue cycle
             else:
                 self.player.updateMovingCorrection()
                 self.player.movingCount = self.player.movingCount + 1
 
-
-        print("")
-        print(self.player.x_coord_sprite[5])
-        print(self.player.x_coord_sprite[0])
-        print(self.player.x_moving_correction)
-        print("X", self.player.x_coord)
-
-
+        print("x coord sprite ", self.player.x_coord_sprite[0])
+        print("y coord sprite ", self.player.y_coord_sprite[0])
 
         #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
         x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
         y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20 + self.player.y_moving_correction
 
-        print("draw")
+
         print(x_draw)
         print(y_draw)
-
+        print("")
+        print(self.player.direction)
 
         # 2. Render
         self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(x_draw, y_draw, 80, 80))  # Sprite y rectangulo animacion
@@ -172,8 +166,10 @@ class Emulator:
             self.pyboy.save_state(f)
 
     def get_player_coords(self):
-        self.player.x_coord = self.pyboy.memory[0xDCB8]
-        self.player.y_coord = self.pyboy.memory[0xDCB7]
+        # Dont update while we are moving
+        if not self.player.movingCycle:
+            self.player.x_coord = self.pyboy.memory[0xDCB8]
+            self.player.y_coord = self.pyboy.memory[0xDCB7]
 
         self.player.map_number = self.pyboy.memory[0xDCB6]
         self.player.map_bank = self.pyboy.memory[0xDCB5]

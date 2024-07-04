@@ -19,7 +19,7 @@ class Player:
     x_moving_correction = 0
     y_moving_correction = 0
 
-    pixelCorrection = [10,10,20,20,30,30,40,40,50,50,60,60,-10,-10,0,0]
+    pixelCorrection = [10,10,20,20,30,30,40,40,50,50,60,60,70,70]
 
     def updateSpriteCoord(self):
         self.x_coord_sprite[4] = self.x_coord_sprite[3]
@@ -39,14 +39,31 @@ class Player:
             return False
 
     def getPlayerDirection(self):
-        if self.x_coord_sprite[0] > self.x_coord_sprite[1]:
-            return "left"
-        elif self.x_coord_sprite[0] < self.x_coord_sprite[1]:
-            return "right"
-        elif self.y_coord_sprite[0] > self.y_coord_sprite[1]:
-            return "up"
-        elif self.y_coord_sprite[0] < self.y_coord_sprite[1]:
-            return "down"
+        # Mov horizontal
+        if self.x_coord_sprite[0] != self.x_coord_sprite[1]:
+            if self.x_coord_sprite[1] != 0:                         # No límite
+                if self.x_coord_sprite[0] > self.x_coord_sprite[1]:
+                    return "left"
+                if self.x_coord_sprite[0] < self.x_coord_sprite[1]:
+                    return "right"
+            else:                                                   # Límite
+                if self.x_coord_sprite[0] - self.x_coord_sprite[1] > 200:  # Salto a la derecha
+                    return "right"
+                elif self.x_coord_sprite[0] - self.x_coord_sprite[1] < 200:  # Salto a la izquierda
+                    return "left"
+        # Mov vertical
+        if self.y_coord_sprite[0] != self.y_coord_sprite[1]:
+            if self.y_coord_sprite[1] != 0:                         # No límite
+                if self.y_coord_sprite[0] > self.y_coord_sprite[1]:
+                    return "up"
+                if self.y_coord_sprite[0] < self.y_coord_sprite[1]:
+                    return "down"
+            else:                                                   # Límite
+                if self.y_coord_sprite[0] - self.y_coord_sprite[1] > 200:  # Salto abajo
+                    return "down"
+                elif self.y_coord_sprite[0] - self.y_coord_sprite[1] < 200:  # Salto arriba
+                    return "up"
+
 
     def updateMovingCorrection(self):
         if self.direction == "left":
@@ -59,6 +76,8 @@ class Player:
             self.y_moving_correction = - self.pixelCorrection[self.movingCount]
 
     def endOfMovingCycle(self):
-        self.x_coord_sprite[5] = self.x_coord_sprite[0]
-        self.y_coord_sprite[5] = self.y_coord_sprite[0]
         self.movingCycle = False
+        self.movingCount = 0
+        self.x_moving_correction = 0
+        self.y_moving_correction = 0
+        print("Moving cycle OFF-----------------------------")
