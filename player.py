@@ -19,7 +19,10 @@ class Player:
     x_moving_correction = 0
     y_moving_correction = 0
 
-    pixelCorrection = [10,10,20,20,30,30,40,40,50,50,60,60,70,70]
+    x_draw = 0
+    y_draw = 0
+
+    pixelCorrection = [0,10,10,20,20,30,30,40,40,50,50,60,60,70,70]
 
     def updateSpriteCoord(self):
         self.x_coord_sprite[4] = self.x_coord_sprite[3]
@@ -34,6 +37,11 @@ class Player:
 
     def isPlayerMoving(self):
         if self.x_coord_sprite[0] != self.x_coord_sprite[1] or self.y_coord_sprite[0] != self.y_coord_sprite[1]:
+            # Correction because the emulator has a +-1 frame instability
+            # An alternative would be to make pixel correction a direct function of sprite coord (many changes)
+            if abs(self.x_coord_sprite[0] - self.x_coord_sprite[1]) > 3 or abs(self.y_coord_sprite[0] - self.y_coord_sprite[1]) > 3:
+                self.movingCount = 1
+            # End of correction
             return True
         else:
             return False

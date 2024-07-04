@@ -83,20 +83,45 @@ class Emulator:
         sprite_factory = sdl2.ext.SpriteFactory(sdl2.ext.TEXTURE, renderer=self.renderer)
         sprite = sprite_factory.from_image("Resources/mainOW.bmp")
 
-        ########################### DEBUG
+        # 2. Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
+        if not self.is_event():
+            self.local_pixel_correction()
 
-        # Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
+        # 3. Dibujar players
+        self.draw_player(sprite)
 
+    def draw_player(self, sprite):
+        if self.player.map_bank == self.player2.map_bank and self.player.map_number == self.player2.map_number:
+
+            #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
+            self.player2.x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
+            self.player2.y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20 + self.player.y_moving_correction
+
+            print(self.player2.x_draw)
+            print(self.player2.y_draw)
+
+            print("")
+
+            # Copy to render
+            self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
+
+    def is_event(self):
+        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
+            print("EVENT")
+            return True
+
+    def local_pixel_correction(self):
         if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] >= 0:
             self.player.direction = self.player.getPlayerDirection()
             self.player.movingCycle = True
             self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
             self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
             print("Moving cycle ON-----------------------------------")
+            print(self.player.direction)
 
         if self.player.movingCycle:
             # End cycle
-            if self.player.movingCount > 13:
+            if self.player.movingCount > 14:
                 self.player.endOfMovingCycle()
                 # Not moving anymore so update coords
                 self.player.x_coord = self.pyboy.memory[0xDCB8]
@@ -105,24 +130,8 @@ class Emulator:
             else:
                 self.player.updateMovingCorrection()
                 self.player.movingCount = self.player.movingCount + 1
-
         print("x coord sprite ", self.player.x_coord_sprite[0])
         print("y coord sprite ", self.player.y_coord_sprite[0])
-
-        #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
-        x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
-        y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20 + self.player.y_moving_correction
-
-
-        print(x_draw)
-        print(y_draw)
-        print("")
-        print(self.player.direction)
-
-        # 2. Render
-        self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(x_draw, y_draw, 80, 80))  # Sprite y rectangulo animacion
-
-        ########################### DEBUG
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
