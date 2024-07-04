@@ -53,6 +53,15 @@ class Emulator:
     player2.x_coord = 9
     player2.y_coord = 7
 
+    # ------------------------ PLAYER
+
+    game_event = False
+    current_map_bank = 0
+    current_map_number = 0
+    current_x = 0
+    current_y = 0
+    warp = 0
+
 
 
     def __init__(self):
@@ -86,29 +95,62 @@ class Emulator:
         # 2. Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
         if not self.is_event():
             self.local_pixel_correction()
+            self.update_coords()
+
+        print(self.player.x_coord)
+        print(self.player.y_coord)
+        print("")
+
+        '''
+        print("x coord sprite ", self.player.x_coord_sprite[0])
+        print("y coord sprite ", self.player.y_coord_sprite[0])
+        print("current map bank ", self.current_map_number)
+        print("p2 map bank ", self.player2.map_number)
+        print("warp ", self.warp)
+        '''
 
         # 3. Dibujar players
         self.draw_player(sprite)
 
     def draw_player(self, sprite):
-        if self.player.map_bank == self.player2.map_bank and self.player.map_number == self.player2.map_number:
+        if self.current_map_bank == self.player2.map_bank and self.current_map_number == self.player2.map_number:
 
             #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
-            self.player2.x_draw = (self.player2.x_coord - self.player.x_coord + 4) * 80 + self.player.x_moving_correction
-            self.player2.y_draw = (self.player2.y_coord - self.player.y_coord + 4) * 80 - 20 + self.player.y_moving_correction
+            self.player2.x_draw = (self.player2.x_coord - self.current_x + 4) * 80 + self.player.x_moving_correction
+            self.player2.y_draw = (self.player2.y_coord - self.current_y + 4) * 80 - 20 + self.player.y_moving_correction
 
+            '''
             print(self.player2.x_draw)
+            print(self.player.x_coord)
             print(self.player2.y_draw)
 
             print("")
+            '''
 
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
 
     def is_event(self):
-        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
-            print("EVENT")
+        # End game event
+        if self.game_event and self.player.x_coord_sprite[1] == 0 and self.player.y_coord_sprite[1] == 0 and self.player.x_coord_sprite[0] == 0 and self.player.y_coord_sprite[0] == 0:
+            self.game_event = False
+            print("End of event")
+            return False
+        # Current game event
+        if self.game_event:
             return True
+        # New game event
+        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
+            self.game_event = True
+            print("New event")
+            return True
+
+    def update_coords(self):
+        self.current_map_bank = self.player.map_bank
+        self.current_map_number = self.player.map_number
+        self.current_x = self.player.x_coord
+        self.current_y = self.player.y_coord
+
 
     def local_pixel_correction(self):
         if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] >= 0:
@@ -130,8 +172,7 @@ class Emulator:
             else:
                 self.player.updateMovingCorrection()
                 self.player.movingCount = self.player.movingCount + 1
-        print("x coord sprite ", self.player.x_coord_sprite[0])
-        print("y coord sprite ", self.player.y_coord_sprite[0])
+
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
@@ -186,6 +227,8 @@ class Emulator:
         self.player.updateSpriteCoord()
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
+
+        self.warp = self.pyboy.memory[0xDCB4]
 
         '''
         print("")
