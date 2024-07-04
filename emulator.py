@@ -50,7 +50,7 @@ class Emulator:
     player2 = Player()
     player2.map_bank = 24
     player2.map_number = 4
-    player2.x_coord = 9
+    player2.x_coord = 4
     player2.y_coord = 7
 
     # ------------------------ PLAYER
@@ -61,6 +61,7 @@ class Emulator:
     current_x = 0
     current_y = 0
     warp = 0
+    event = 0
 
 
 
@@ -97,18 +98,6 @@ class Emulator:
             self.local_pixel_correction()
             self.update_coords()
 
-        print(self.player.x_coord)
-        print(self.player.y_coord)
-        print("")
-
-        '''
-        print("x coord sprite ", self.player.x_coord_sprite[0])
-        print("y coord sprite ", self.player.y_coord_sprite[0])
-        print("current map bank ", self.current_map_number)
-        print("p2 map bank ", self.player2.map_number)
-        print("warp ", self.warp)
-        '''
-
         # 3. Dibujar players
         self.draw_player(sprite)
 
@@ -118,14 +107,6 @@ class Emulator:
             #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
             self.player2.x_draw = (self.player2.x_coord - self.current_x + 4) * 80 + self.player.x_moving_correction
             self.player2.y_draw = (self.player2.y_coord - self.current_y + 4) * 80 - 20 + self.player.y_moving_correction
-
-            '''
-            print(self.player2.x_draw)
-            print(self.player.x_coord)
-            print(self.player2.y_draw)
-
-            print("")
-            '''
 
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
@@ -154,12 +135,12 @@ class Emulator:
 
     def local_pixel_correction(self):
         if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] >= 0:
-            self.player.direction = self.player.getPlayerDirection()
+            self.player.moving = self.player.getPlayerDirection()
             self.player.movingCycle = True
             self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
             self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
             print("Moving cycle ON-----------------------------------")
-            print(self.player.direction)
+            print(self.player.moving)
 
         if self.player.movingCycle:
             # End cycle
@@ -229,15 +210,4 @@ class Emulator:
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
 
         self.warp = self.pyboy.memory[0xDCB4]
-
-        '''
-        print("")
-        print("sprite X = ", self.pyboy.memory[0xD14C])    # sprite X
-        print("sprite Y = ", self.pyboy.memory[0xD14D])    # sprite Y
-        print("player X = ", self.player.x_coord)
-        print("player Y = ", self.player.y_coord)
-        print("map bank = ", self.pyboy.memory[0xDCB5])
-        print("map number = ", self.pyboy.memory[0xDCB6])
-        '''
-
-
+        self.room = self.pyboy.memory[0xD148]

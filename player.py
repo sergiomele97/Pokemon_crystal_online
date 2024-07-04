@@ -13,7 +13,7 @@ class Player:
     x_coord_sprite = [-1, -1, -1, -1, -1, -1]
     y_coord_sprite = [-1, -1, -1, -1, -1, -1]
 
-    direction = "None"
+    moving = "None"
     movingCycle = False
     movingCount = 0
     x_moving_correction = 0
@@ -21,6 +21,8 @@ class Player:
 
     x_draw = 0
     y_draw = 0
+
+    room = 0
 
     pixelCorrection = [0,10,10,20,20,30,30,40,40,50,50,60,60,70,70]
 
@@ -74,13 +76,13 @@ class Player:
 
 
     def updateMovingCorrection(self):
-        if self.direction == "left":
+        if self.moving == "left":
             self.x_moving_correction = self.pixelCorrection[self.movingCount]
-        elif self.direction == "right":
+        elif self.moving == "right":
             self.x_moving_correction = - self.pixelCorrection[self.movingCount]
-        elif self.direction == "up":
+        elif self.moving == "up":
             self.y_moving_correction = self.pixelCorrection[self.movingCount]
-        elif self.direction == "down":
+        elif self.moving == "down":
             self.y_moving_correction = - self.pixelCorrection[self.movingCount]
 
     def endOfMovingCycle(self):
