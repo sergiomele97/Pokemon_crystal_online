@@ -62,6 +62,9 @@ class Emulator:
     current_y = 0
     warp = 0
     event = 0
+    prueba1 = 0
+    prueba2 = 0
+    prueba3 = 0
 
 
 
@@ -94,6 +97,7 @@ class Emulator:
         sprite = sprite_factory.from_image("Resources/mainOW.bmp")
 
         # 2. Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
+        #what_is_going_on()
         if not self.is_event():
             self.local_pixel_correction()
             self.update_coords()
@@ -110,10 +114,21 @@ class Emulator:
 
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
+    '''
+    def what_is_going_on(self):
+        if self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] <= 4
+        if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1]:
+            if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[2] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[2]:
+                return("Staying still")
+    '''
 
     def is_event(self):
         # End game event
         if self.game_event and self.player.x_coord_sprite[1] == 0 and self.player.y_coord_sprite[1] == 0 and self.player.x_coord_sprite[0] == 0 and self.player.y_coord_sprite[0] == 0:
+            self.game_event = False
+            print("End of event")
+            return False
+        if self.game_event and (0 < self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] <= 4 or 0 < self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1] <= 4):
             self.game_event = False
             print("End of event")
             return False
@@ -208,6 +223,23 @@ class Emulator:
         self.player.updateSpriteCoord()
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
+        print("")
+        print(self.player.x_coord_sprite[0])
+        print(self.player.y_coord_sprite[0])
+        print("x y bank number")
+        print(self.player.x_coord)
+        print(self.player.y_coord)
+        print(self.player.map_bank)
+        print(self.player.map_number)
+        self.prueba1 = self.pyboy.memory[0xD0A1]
+        self.prueba2 = self.pyboy.memory[0xD0A2]
+        self.prueba3 = self.pyboy.memory[0xC2FC]
+        print(self.prueba1)
+        print(self.prueba2)
+        print(self.prueba3)
+        print(self.game_event)
 
-        self.warp = self.pyboy.memory[0xDCB4]
-        self.room = self.pyboy.memory[0xD148]
+        # Con colision data puedo detectar cuando hay un cambio de mapa
+        # De forma que todos los eventos raros que no sean cambio de mapa no lleven a dejar de dibujar el personaje
+
+
