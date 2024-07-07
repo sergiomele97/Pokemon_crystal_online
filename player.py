@@ -16,9 +16,12 @@ class Player:
     moving = "None"
     movingCycle = False
     movingCount = 0
+
+    transitionCycle = False
+    transitionCount = 0
+
     x_moving_correction = 0
     y_moving_correction = 0
-
     x_draw = 0
     y_draw = 0
 
@@ -37,16 +40,6 @@ class Player:
         self.y_coord_sprite[2] = self.y_coord_sprite[1]
         self.y_coord_sprite[1] = self.y_coord_sprite[0]
 
-    def isPlayerMoving(self):
-        if self.x_coord_sprite[0] != self.x_coord_sprite[1] or self.y_coord_sprite[0] != self.y_coord_sprite[1]:
-            # Correction because the emulator has a +-1 frame instability
-            # An alternative would be to make pixel correction a direct function of sprite coord (many changes)
-            if abs(self.x_coord_sprite[0] - self.x_coord_sprite[1]) > 3 or abs(self.y_coord_sprite[0] - self.y_coord_sprite[1]) > 3:
-                self.movingCount = 1
-            # End of correction
-            return True
-        else:
-            return False
 
     def getPlayerDirection(self):
         # Mov horizontal
@@ -85,9 +78,3 @@ class Player:
         elif self.moving == "down":
             self.y_moving_correction = - self.pixelCorrection[self.movingCount]
 
-    def endOfMovingCycle(self):
-        self.movingCycle = False
-        self.movingCount = 0
-        self.x_moving_correction = 0
-        self.y_moving_correction = 0
-        print("Moving cycle OFF-----------------------------")

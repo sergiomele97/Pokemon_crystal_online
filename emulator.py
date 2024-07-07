@@ -53,19 +53,13 @@ class Emulator:
     player2.x_coord = 4
     player2.y_coord = 7
 
-    # ------------------------ PLAYER
-
-    game_event = False
     current_map_bank = 0
     current_map_number = 0
     current_x = 0
     current_y = 0
-    warp = 0
-    event = 0
-    prueba1 = 0
-    prueba2 = 0
-    prueba3 = 0
 
+    sprite_coord_changes = "Still"
+    observing_changes = True
 
 
     def __init__(self):
@@ -92,18 +86,131 @@ class Emulator:
         self.renderer.present()      # 4. Present
 
     def update_sprites(self):
-        # 1. Load the sprite (assuming you have a transparent BMP)
+        # Load the sprite (assuming you have a transparent BMP)
         sprite_factory = sdl2.ext.SpriteFactory(sdl2.ext.TEXTURE, renderer=self.renderer)
         sprite = sprite_factory.from_image("Resources/mainOW.bmp")
 
-        # 2. Corrección: para actualizar el sprite con precisión de pixel y no de cuadrado
-        #what_is_going_on()
-        if not self.is_event():
-            self.local_pixel_correction()
-            self.update_coords()
+        # 1. Hay ciclo
+        if self.player.transitionCycle:
+            self.continueTransitionCycle()
+        elif self.player.movingCycle:
+            self.continueMovingCycle()
+
+        # 2. No hay ciclo
+        if self.observing_changes:
+            self.update_local_context()     # 2.1 Qué cambios ha habido en xy sprite coords
+
+            # Hierarchy: transition  > event > moving .
+
+            if self.sprite_coord_changes == "None":
+                pass
+
+            elif self.is_transition():
+                self.start_transition_cycle()
+                self.continueTransitionCycle()  # 1 Iteration
+
+            elif self.is_event():
+                pass
+
+            elif self.is_movement():
+                self.start_movement_cycle()
+                self.continueMovingCycle()      # 1 Iteration
+
+        self.update_coords()
+
+        print("")
+        print(self.player.x_coord_sprite)
+        print(self.player.y_coord_sprite)
 
         # 3. Dibujar players
         self.draw_player(sprite)
+
+    '''
+        This function must define what is going on in the emulator (Player either: moving, event or changing the map
+        Its parameters are: x_coord_sprite, y_coord_sprite.
+        
+        - Things that might trigger a stop in drawing: 
+            - Map transistion cycle: f(collision info + moving cycle)
+                - Map transition cycle is the only thing that might change the self. map and map number variables.
+        - it might work as a hierarchy: transition cycle > event > moving cycle.
+            - transition cycle cancels the possibility of event.
+        
+    '''
+    def update_local_context(self):
+        if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1]:
+            self.sprite_coord_changes = "None"    # No changes
+        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
+            self.sprite_coord_changes = "Both"    # Change in both
+        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1]:
+            self.sprite_coord_changes = "x"  # Change in x
+        if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
+            self.sprite_coord_changes = "y"  # Change in y
+
+    # TRANSITION CYCLE ------------------------------------------------------------------------------------------
+
+    def continueTransitionCycle(self):
+        pass
+
+    def start_transition_cycle(self):
+        print("Transition cycle ON-----------------------------------")
+
+    def is_transition(self):
+        return False
+
+    # ---------------------------------------------------------------------------------------------------------
+    # MOVEMENT CYCLE ------------------------------------------------------------------------------------------
+    def is_movement(self):
+        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] or self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
+            # Correction because the emulator has a +-1 frame instability
+            # An alternative would be to make pixel correction a direct function of sprite coord (many changes)
+            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1]) > 3 or abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1]) > 3:
+                self.player.movingCount = 1
+            # End of correction
+            return True
+        else:
+            return False
+
+    def start_movement_cycle(self):
+        self.observing_changes = False
+        self.player.movingCycle = True
+        self.player.moving = self.player.getPlayerDirection()
+        self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
+        self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
+        print("Moving cycle ON-----------------------------------")
+        print(self.player.moving)
+
+    def continueMovingCycle(self):
+        # End cycle
+        if self.player.movingCount > 14:
+            self.endOfMovingCycle()
+            # Not moving anymore so update coords
+            self.player.x_coord = self.pyboy.memory[0xDCB8]
+            self.player.y_coord = self.pyboy.memory[0xDCB7]
+        # Continue cycle
+        else:
+            self.player.updateMovingCorrection()
+            self.player.movingCount = self.player.movingCount + 1
+
+    def endOfMovingCycle(self):
+        self.observing_changes = True
+        self.player.movingCycle = False
+        self.player.movingCount = 0
+        self.player.x_moving_correction = 0
+        self.player.y_moving_correction = 0
+        print("Moving cycle OFF-----------------------------")
+
+    # ---------------------------------------------------------------------------------------------------------
+
+    def is_event(self):
+        if self.sprite_coord_changes == "Both":
+            return True
+        if self.sprite_coord_changes == "x":
+            if 4 < self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] < 251:
+                return True
+        if self.sprite_coord_changes == "y":
+            if 4 < self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1] < 251:
+                return True
+        return False
 
     def draw_player(self, sprite):
         if self.current_map_bank == self.player2.map_bank and self.current_map_number == self.player2.map_number:
@@ -111,64 +218,17 @@ class Emulator:
             #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
             self.player2.x_draw = (self.player2.x_coord - self.current_x + 4) * 80 + self.player.x_moving_correction
             self.player2.y_draw = (self.player2.y_coord - self.current_y + 4) * 80 - 20 + self.player.y_moving_correction
-
+            print("")
+            print(self.player2.x_draw)
+            print(self.player2.y_draw)
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
-    '''
-    def what_is_going_on(self):
-        if self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] <= 4
-        if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1]:
-            if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[2] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[2]:
-                return("Staying still")
-    '''
-
-    def is_event(self):
-        # End game event
-        if self.game_event and self.player.x_coord_sprite[1] == 0 and self.player.y_coord_sprite[1] == 0 and self.player.x_coord_sprite[0] == 0 and self.player.y_coord_sprite[0] == 0:
-            self.game_event = False
-            print("End of event")
-            return False
-        if self.game_event and (0 < self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] <= 4 or 0 < self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1] <= 4):
-            self.game_event = False
-            print("End of event")
-            return False
-        # Current game event
-        if self.game_event:
-            return True
-        # New game event
-        if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
-            self.game_event = True
-            print("New event")
-            return True
 
     def update_coords(self):
         self.current_map_bank = self.player.map_bank
         self.current_map_number = self.player.map_number
         self.current_x = self.player.x_coord
         self.current_y = self.player.y_coord
-
-
-    def local_pixel_correction(self):
-        if not self.player.movingCycle and self.player.isPlayerMoving() and self.player.x_coord_sprite[4] >= 0:
-            self.player.moving = self.player.getPlayerDirection()
-            self.player.movingCycle = True
-            self.player.x_coord_sprite[5] = self.player.x_coord_sprite[1]
-            self.player.y_coord_sprite[5] = self.player.y_coord_sprite[1]
-            print("Moving cycle ON-----------------------------------")
-            print(self.player.moving)
-
-        if self.player.movingCycle:
-            # End cycle
-            if self.player.movingCount > 14:
-                self.player.endOfMovingCycle()
-                # Not moving anymore so update coords
-                self.player.x_coord = self.pyboy.memory[0xDCB8]
-                self.player.y_coord = self.pyboy.memory[0xDCB7]
-            # Continue cycle
-            else:
-                self.player.updateMovingCorrection()
-                self.player.movingCount = self.player.movingCount + 1
-
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
