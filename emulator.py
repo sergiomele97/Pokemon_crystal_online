@@ -103,6 +103,7 @@ class Emulator:
             # Hierarchy: transition  > event > moving .
 
             if self.sprite_coord_changes == "None":
+                self.update_coords()
                 pass
 
             elif self.is_transition():
@@ -115,8 +116,6 @@ class Emulator:
             elif self.is_movement():
                 self.start_movement_cycle()
                 self.continueMovingCycle()      # 1 Iteration
-
-        self.update_coords()
 
         print("")
         print(self.player.x_coord_sprite)
@@ -163,7 +162,9 @@ class Emulator:
         if self.player.x_coord_sprite[0] != self.player.x_coord_sprite[1] or self.player.y_coord_sprite[0] != self.player.y_coord_sprite[1]:
             # Correction because the emulator has a +-1 frame instability
             # An alternative would be to make pixel correction a direct function of sprite coord (many changes)
-            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1]) > 3 or abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1]) > 3:
+            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1]) == 4 or abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1]) == 4:
+                self.player.movingCount = 1
+            if abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1]) == 252 or abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1]) == 252:
                 self.player.movingCount = 1
             # End of correction
             return True
@@ -183,9 +184,6 @@ class Emulator:
         # End cycle
         if self.player.movingCount > 14:
             self.endOfMovingCycle()
-            # Not moving anymore so update coords
-            self.player.x_coord = self.pyboy.memory[0xDCB8]
-            self.player.y_coord = self.pyboy.memory[0xDCB7]
         # Continue cycle
         else:
             self.player.updateMovingCorrection()
@@ -197,6 +195,8 @@ class Emulator:
         self.player.movingCount = 0
         self.player.x_moving_correction = 0
         self.player.y_moving_correction = 0
+        self.update_coords()
+
         print("Moving cycle OFF-----------------------------")
 
     # ---------------------------------------------------------------------------------------------------------
@@ -229,6 +229,7 @@ class Emulator:
         self.current_map_number = self.player.map_number
         self.current_x = self.player.x_coord
         self.current_y = self.player.y_coord
+        print("update")
 
     def update_background(self):
         # 1. Gets emulator image as ndarray
@@ -273,9 +274,8 @@ class Emulator:
 
     def get_player_coords(self):
         # Dont update while we are moving
-        if not self.player.movingCycle:
-            self.player.x_coord = self.pyboy.memory[0xDCB8]
-            self.player.y_coord = self.pyboy.memory[0xDCB7]
+        self.player.x_coord = self.pyboy.memory[0xDCB8]
+        self.player.y_coord = self.pyboy.memory[0xDCB7]
 
         self.player.map_number = self.pyboy.memory[0xDCB6]
         self.player.map_bank = self.pyboy.memory[0xDCB5]
