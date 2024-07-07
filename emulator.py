@@ -223,21 +223,7 @@ class Emulator:
         self.player.updateSpriteCoord()
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
-        print("")
-        print(self.player.x_coord_sprite[0])
-        print(self.player.y_coord_sprite[0])
-        print("x y bank number")
-        print(self.player.x_coord)
-        print(self.player.y_coord)
-        print(self.player.map_bank)
-        print(self.player.map_number)
-        self.prueba1 = self.pyboy.memory[0xD0A1]
-        self.prueba2 = self.pyboy.memory[0xD0A2]
-        self.prueba3 = self.pyboy.memory[0xC2FC]
-        print(self.prueba1)
-        print(self.prueba2)
-        print(self.prueba3)
-        print(self.game_event)
+
 
         # Con colision data puedo detectar cuando hay un cambio de mapa
         # De forma que todos los eventos raros que no sean cambio de mapa no lleven a dejar de dibujar el personaje
