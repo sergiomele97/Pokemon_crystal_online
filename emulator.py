@@ -58,6 +58,11 @@ class Emulator:
     current_x = 0
     current_y = 0
 
+    collision_down = 0
+    collision_up = 0
+    collision_left = 0
+    collision_right = 0
+
     sprite_coord_changes = "Still"
     observing_changes = True
 
@@ -71,9 +76,11 @@ class Emulator:
         self.window.show()
         self.open_state()
         running = True
+        self.get_ram_data()
+        self.update_coords()
 
         while running:
-            self.get_player_coords()    # Coords from last tick
+            self.get_ram_data()    # Coords from last tick
             self.pyboy.tick()
             running = self.handle_events(running)
             self.update_screen()
@@ -90,20 +97,24 @@ class Emulator:
         sprite_factory = sdl2.ext.SpriteFactory(sdl2.ext.TEXTURE, renderer=self.renderer)
         sprite = sprite_factory.from_image("Resources/mainOW.bmp")
 
+        print("")
+        print(self.player.x_coord_sprite)
+        print(self.player.y_coord_sprite)
+
+        self.update_local_context()  # Qué cambios ha habido en xy sprite coords
+
         # 1. Hay ciclo
+
+        if self.player.movingCycle:
+            self.continueMovingCycle()
         if self.player.transitionCycle:
             self.continueTransitionCycle()
-        elif self.player.movingCycle:
-            self.continueMovingCycle()
 
         # 2. No hay ciclo
         if self.observing_changes:
-            self.update_local_context()     # 2.1 Qué cambios ha habido en xy sprite coords
-
-            # Hierarchy: transition  > event > moving .
+            # Hierarchy: transition > event > moving .
 
             if self.sprite_coord_changes == "None":
-                self.update_coords()
                 pass
 
             elif self.is_transition():
@@ -111,15 +122,14 @@ class Emulator:
                 self.continueTransitionCycle()  # 1 Iteration
 
             elif self.is_event():
+                print("event")
                 pass
 
             elif self.is_movement():
                 self.start_movement_cycle()
                 self.continueMovingCycle()      # 1 Iteration
 
-        print("")
-        print(self.player.x_coord_sprite)
-        print(self.player.y_coord_sprite)
+
 
         # 3. Dibujar players
         self.draw_player(sprite)
@@ -148,12 +158,33 @@ class Emulator:
     # TRANSITION CYCLE ------------------------------------------------------------------------------------------
 
     def continueTransitionCycle(self):
+        if self.player.transitionCount > 25:
+            self.end_transition_cycle()
+        self.player.transitionCount = self.player.transitionCount + 1
+        # Se ejecute solo cuando haya terminado el moving cycle:
+        if not self.player.movingCycle:
+            self.update_coords()
         pass
 
+    def end_transition_cycle(self):
+        self.player.transitionCycle = False
+        self.player.transitionCount = 0
+        print("Transition cycle OFF-----------------------------------")
+
     def start_transition_cycle(self):
+        self.player.transitionCycle = True
         print("Transition cycle ON-----------------------------------")
 
     def is_transition(self):
+        # 113 transition aka door transition
+        if self.player.moving == "down" and self.collision_down == 113:
+            return True
+        if self.player.moving == "up" and self.collision_up == 113:
+            return True
+        if self.player.moving == "left" and self.collision_left == 113:
+            return True
+        if self.player.moving == "right" and self.collision_right == 113:
+            return True
         return False
 
     # ---------------------------------------------------------------------------------------------------------
@@ -180,10 +211,18 @@ class Emulator:
         print("Moving cycle ON-----------------------------------")
         print(self.player.moving)
 
+        if self.is_transition():
+            self.start_transition_cycle()
+            pass
+
     def continueMovingCycle(self):
         # End cycle
         if self.player.movingCount > 14:
             self.endOfMovingCycle()
+        # In moving cycle event
+        elif self.is_event():
+            self.in_movement_event()
+            pass
         # Continue cycle
         else:
             self.player.updateMovingCorrection()
@@ -193,6 +232,7 @@ class Emulator:
         self.observing_changes = True
         self.player.movingCycle = False
         self.player.movingCount = 0
+        self.player.moving = "None"
         self.player.x_moving_correction = 0
         self.player.y_moving_correction = 0
         self.update_coords()
@@ -200,6 +240,9 @@ class Emulator:
         print("Moving cycle OFF-----------------------------")
 
     # ---------------------------------------------------------------------------------------------------------
+    def in_movement_event(self):    # Al cambiar de zona deja de actualizar durante 1 frame
+        self.player.x_coord_sprite[0] = self.player.x_coord_sprite[1]
+        self.player.y_coord_sprite[0] = self.player.y_coord_sprite[1]
 
     def is_event(self):
         if self.sprite_coord_changes == "Both":
@@ -218,9 +261,10 @@ class Emulator:
             #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
             self.player2.x_draw = (self.player2.x_coord - self.current_x + 4) * 80 + self.player.x_moving_correction
             self.player2.y_draw = (self.player2.y_coord - self.current_y + 4) * 80 - 20 + self.player.y_moving_correction
-            print("")
+
             print(self.player2.x_draw)
             print(self.player2.y_draw)
+            print("")
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
 
@@ -272,8 +316,7 @@ class Emulator:
         with open("States/state_file.state", "wb") as f:
             self.pyboy.save_state(f)
 
-    def get_player_coords(self):
-        # Dont update while we are moving
+    def get_ram_data(self):
         self.player.x_coord = self.pyboy.memory[0xDCB8]
         self.player.y_coord = self.pyboy.memory[0xDCB7]
 
@@ -284,6 +327,14 @@ class Emulator:
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
         self.player.y_coord_sprite[0] = self.pyboy.memory[0xD14D]
 
+        self.collision_down = self.pyboy.memory[0xC2FA]
+        self.collision_up = self.pyboy.memory[0xC2FB]
+        self.collision_left = self.pyboy.memory[0xC2FC]
+        self.collision_right = self.pyboy.memory[0xC2FD]
+        print(self.collision_down)
+        print(self.collision_up)
+        print(self.collision_left)
+        print(self.collision_right)
 
         # Con colision data puedo detectar cuando hay un cambio de mapa
         # De forma que todos los eventos raros que no sean cambio de mapa no lleven a dejar de dibujar el personaje
