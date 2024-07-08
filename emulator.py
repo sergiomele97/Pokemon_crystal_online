@@ -49,9 +49,9 @@ class Emulator:
 
     player2 = Player()
     player2.map_bank = 24
-    player2.map_number = 4
+    player2.map_number = 5
     player2.x_coord = 4
-    player2.y_coord = 7
+    player2.y_coord = 9
 
     current_map_bank = 0
     current_map_number = 0
@@ -117,10 +117,6 @@ class Emulator:
             if self.sprite_coord_changes == "None":
                 pass
 
-            elif self.is_transition():
-                self.start_transition_cycle()
-                self.continueTransitionCycle()  # 1 Iteration
-
             elif self.is_event():
                 print("event")
                 pass
@@ -129,10 +125,9 @@ class Emulator:
                 self.start_movement_cycle()
                 self.continueMovingCycle()      # 1 Iteration
 
-
-
         # 3. Dibujar players
         self.draw_player(sprite)
+
 
     '''
         This function must define what is going on in the emulator (Player either: moving, event or changing the map
@@ -158,7 +153,7 @@ class Emulator:
     # TRANSITION CYCLE ------------------------------------------------------------------------------------------
 
     def continueTransitionCycle(self):
-        if self.player.transitionCount > 25:
+        if self.player.transitionCount > 30:
             self.end_transition_cycle()
         self.player.transitionCount = self.player.transitionCount + 1
         # Se ejecute solo cuando haya terminado el moving cycle:
@@ -185,6 +180,17 @@ class Emulator:
             return True
         if self.player.moving == "right" and self.collision_right == 113:
             return True
+        # 255 transition aka red transition
+        '''
+        if self.player.moving == "down" and self.collision_down == 255:
+            return True
+        if self.player.moving == "up" and self.collision_up == 255:
+            return True
+        if self.player.moving == "left" and self.collision_left == 255:
+            return True
+        if self.player.moving == "right" and self.collision_right == 255:
+            return True
+        '''
         return False
 
     # ---------------------------------------------------------------------------------------------------------
@@ -203,6 +209,7 @@ class Emulator:
             return False
 
     def start_movement_cycle(self):
+        self.update_coords()
         self.observing_changes = False
         self.player.movingCycle = True
         self.player.moving = self.player.getPlayerDirection()
@@ -225,6 +232,9 @@ class Emulator:
             pass
         # Continue cycle
         else:
+            if abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[2]) == 4 and self.player.y_coord_sprite[2] != self.player.y_coord_sprite[5]:
+                self.player.movingCount = self.player.movingCount + 1
+                print("SALTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             self.player.updateMovingCorrection()
             self.player.movingCount = self.player.movingCount + 1
 
@@ -248,10 +258,10 @@ class Emulator:
         if self.sprite_coord_changes == "Both":
             return True
         if self.sprite_coord_changes == "x":
-            if 4 < self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1] < 251:
+            if 4 < abs(self.player.x_coord_sprite[0] - self.player.x_coord_sprite[1]) < 251:
                 return True
         if self.sprite_coord_changes == "y":
-            if 4 < self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1] < 251:
+            if 4 < abs(self.player.y_coord_sprite[0] - self.player.y_coord_sprite[1]) < 251:
                 return True
         return False
 
@@ -322,6 +332,11 @@ class Emulator:
 
         self.player.map_number = self.pyboy.memory[0xDCB6]
         self.player.map_bank = self.pyboy.memory[0xDCB5]
+        print("map and bank")
+        print(self.player.map_number)
+        print(self.player.map_bank)
+        print(self.current_map_number)
+        print(self.current_map_bank)
 
         self.player.updateSpriteCoord()
         self.player.x_coord_sprite[0] = self.pyboy.memory[0xD14C]
@@ -331,12 +346,15 @@ class Emulator:
         self.collision_up = self.pyboy.memory[0xC2FB]
         self.collision_left = self.pyboy.memory[0xC2FC]
         self.collision_right = self.pyboy.memory[0xC2FD]
+
         print(self.collision_down)
         print(self.collision_up)
         print(self.collision_left)
         print(self.collision_right)
 
-        # Con colision data puedo detectar cuando hay un cambio de mapa
-        # De forma que todos los eventos raros que no sean cambio de mapa no lleven a dejar de dibujar el personaje
+
+        # Mi siguiente idea es tratar de clasificar los eventos con la info que
+        # repiten en x e y sprite coords: EJ parece que al pasar por una puerta
+        # roja: siempre hay 3 y sprite coords = 223
 
 
