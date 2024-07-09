@@ -53,6 +53,12 @@ class Emulator:
     player2.x_coord = 4
     player2.y_coord = 9
 
+    player3 = Player()
+    player3.map_bank = 24
+    player3.map_number = 4
+    player3.x_coord = 4
+    player3.y_coord = 6
+
     current_map_bank = 0
     current_map_number = 0
     current_x = 0
@@ -65,7 +71,15 @@ class Emulator:
 
     sprite_coord_changes = "Still"
     observing_changes = True
+    draw_allowed = True
 
+    transition_type = "door"
+    transition_times = {
+        "door_start": 20,
+        "door_end": 38,
+        "red_door_start": 0,
+        "red_door_end": 15,
+    }
 
     def __init__(self):
         print("Constructor")
@@ -103,14 +117,17 @@ class Emulator:
 
         self.update_local_context()  # Qué cambios ha habido en xy sprite coords
 
-        # 1. Hay ciclo
+        # 1. Ciclos
 
         if self.player.movingCycle:
             self.continueMovingCycle()
         if self.player.transitionCycle:
             self.continueTransitionCycle()
 
-        # 2. No hay ciclo
+        # 2. Triggers de ciclo
+        if self.is_red_door_transition():
+            self.start_transition_cycle()
+
         if self.observing_changes:
             # Hierarchy: transition > event > moving .
 
@@ -153,44 +170,57 @@ class Emulator:
     # TRANSITION CYCLE ------------------------------------------------------------------------------------------
 
     def continueTransitionCycle(self):
-        if self.player.transitionCount > 30:
+        if self.player.transitionCount > 40:    # Potenciales bugs se pueden solucionar modificando esta variable
             self.end_transition_cycle()
+            return 0
         self.player.transitionCount = self.player.transitionCount + 1
         # Se ejecute solo cuando haya terminado el moving cycle:
         if not self.player.movingCycle:
             self.update_coords()
-        pass
+
+        if self.transition_type == "door":
+            if self.transition_times["door_start"] < self.player.transitionCount < self.transition_times["door_end"]:
+                self.draw_allowed = False
+            else:
+                self.draw_allowed = True
+        if self.transition_type == "red_door":
+            if self.transition_times["red_door_start"] < self.player.transitionCount < self.transition_times["red_door_end"]:
+                self.draw_allowed = False
+            else:
+                self.draw_allowed = True
 
     def end_transition_cycle(self):
         self.player.transitionCycle = False
-        self.player.transitionCount = 0
+        self.draw_allowed = True
         print("Transition cycle OFF-----------------------------------")
 
     def start_transition_cycle(self):
         self.player.transitionCycle = True
+        self.player.transitionCount = 0
         print("Transition cycle ON-----------------------------------")
 
     def is_transition(self):
         # 113 transition aka door transition
         if self.player.moving == "down" and self.collision_down == 113:
+            self.transition_type = "door"
             return True
         if self.player.moving == "up" and self.collision_up == 113:
+            self.transition_type = "door"
             return True
         if self.player.moving == "left" and self.collision_left == 113:
+            self.transition_type = "door"
             return True
         if self.player.moving == "right" and self.collision_right == 113:
+            self.transition_type = "door"
             return True
+        return False
+
+    def is_red_door_transition(self):
         # 255 transition aka red transition
-        '''
-        if self.player.moving == "down" and self.collision_down == 255:
+        if self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1] == self.player.y_coord_sprite[2] == self.player.y_coord_sprite[3] == 223:
+            print("red door transition")
+            self.transition_type = "red_door"
             return True
-        if self.player.moving == "up" and self.collision_up == 255:
-            return True
-        if self.player.moving == "left" and self.collision_left == 255:
-            return True
-        if self.player.moving == "right" and self.collision_right == 255:
-            return True
-        '''
         return False
 
     # ---------------------------------------------------------------------------------------------------------
@@ -266,6 +296,9 @@ class Emulator:
         return False
 
     def draw_player(self, sprite):
+        if not self.draw_allowed:
+            return 0
+
         if self.current_map_bank == self.player2.map_bank and self.current_map_number == self.player2.map_number:
 
             #   x_draw = (x jugador2 - x jugador1 + cuadrados hasta centro pantalla) * pixeles/cuadrado
@@ -277,6 +310,13 @@ class Emulator:
             print("")
             # Copy to render
             self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player2.x_draw, self.player2.y_draw, 80, 80))  # Sprite y rectangulo animacion
+
+        if self.current_map_bank == self.player3.map_bank and self.current_map_number == self.player3.map_number:
+
+            self.player3.x_draw = (self.player3.x_coord - self.current_x + 4) * 80 + self.player.x_moving_correction
+            self.player3.y_draw = (self.player3.y_coord - self.current_y + 4) * 80 - 20 + self.player.y_moving_correction
+
+            self.renderer.copy(sprite, srcrect=(17, 0, 16, 16), dstrect=(self.player3.x_draw, self.player3.y_draw, 80, 80))
 
     def update_coords(self):
         self.current_map_bank = self.player.map_bank
