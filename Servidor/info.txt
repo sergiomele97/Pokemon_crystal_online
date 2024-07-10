@@ -5,4 +5,11 @@ En cuanto al envio de informacion se puede hacer a bajo nivel usando sockets o c
 sockets es mas rapido y con menos latencia, mejor para videojuegos, pero no suele estar hosteado gratuitamente.
 http seria probablemente suficiente para este juego, no necesitamos una latencia super rapida.
 
+
+
+Despues de probar algunas opciones, voy a intentar hacerlo en node js con websockets.
+Aunque es empezar de cero.
 https://www.koyeb.com/tutorials/using-websockets-with-socketio-and-nodejs-on-koyeb
+
+
+Otra opcion seria usando http con python flask.
