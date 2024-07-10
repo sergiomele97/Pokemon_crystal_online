@@ -1,0 +1,8 @@
+He estado investigando opciones para hostear el servidor gratuitamente y la siguiente a probar es Koyeb.
+He probado replit, pero parece que ya no hay opcion gratuita.
+
+En cuanto al envio de informacion se puede hacer a bajo nivel usando sockets o con http (implementacion de socket)
+sockets es mas rapido y con menos latencia, mejor para videojuegos, pero no suele estar hosteado gratuitamente.
+http seria probablemente suficiente para este juego, no necesitamos una latencia super rapida.
+
+https://www.koyeb.com/tutorials/using-websockets-with-socketio-and-nodejs-on-koyeb
