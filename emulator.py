@@ -3,11 +3,7 @@ from pyboy.utils import WindowEvent
 from player import Player
 import sdl2
 import sdl2.ext
-import server
 import asyncio
-import websockets
-
-
 
 
 class Emulator:
@@ -152,18 +148,6 @@ class Emulator:
         # 3. Dibujar players
         self.draw_player(sprite)
 
-
-    '''
-        This function must define what is going on in the emulator (Player either: moving, event or changing the map
-        Its parameters are: x_coord_sprite, y_coord_sprite.
-        
-        - Things that might trigger a stop in drawing: 
-            - Map transistion cycle: f(collision info + moving cycle)
-                - Map transition cycle is the only thing that might change the self. map and map number variables.
-        - it might work as a hierarchy: transition cycle > event > moving cycle.
-            - transition cycle cancels the possibility of event.
-        
-    '''
     def update_local_context(self):
         if self.player.x_coord_sprite[0] == self.player.x_coord_sprite[1] and self.player.y_coord_sprite[0] == self.player.y_coord_sprite[1]:
             self.sprite_coord_changes = "None"    # No changes

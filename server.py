@@ -14,7 +14,7 @@ class ServerConnection:
     async def send_position(self):
         while True:
             await self.websocket.send("Hola que tal?")
-            await asyncio.sleep(0.5)  # Envía la posición cada 100ms
+            await asyncio.sleep(0.5)  # Envía la posición cada medio segundo
 
     async def receive_positions(self):
         while True:
