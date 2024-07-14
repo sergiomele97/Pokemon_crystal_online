@@ -3,6 +3,10 @@ from pyboy.utils import WindowEvent
 from player import Player
 import sdl2
 import sdl2.ext
+import server
+import asyncio
+import websockets
+
 
 
 
@@ -81,11 +85,13 @@ class Emulator:
         "red_door_end": 15,
     }
 
+    # ------------------------ Server
+
     def __init__(self):
         print("Constructor")
 
     # ------------ RUN
-    def run(self):
+    async def run(self):
 
         self.window.show()
         self.open_state()
@@ -99,6 +105,7 @@ class Emulator:
             running = self.handle_events(running)
             self.update_screen()
             self.window.refresh()
+            await asyncio.sleep(0)  # Importante, cede el control al resto de funciones asíncronas
 
     def update_screen(self):
         self.renderer.clear()        # 1. Clear
