@@ -1,3 +1,4 @@
-1. Pyboy
+1. Pyboy (for now this won't work as we're using a modified local version)
 pip install pyboy
 	pyboy, numpy, pysdl2, pysdl2-dll
+2. websockets
