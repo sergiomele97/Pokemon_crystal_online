@@ -348,9 +348,15 @@ class Emulator:
         return running
 
     def open_state(self):
-        # Load file
-        with open("States/state_file.state", "rb") as f:
-            self.pyboy.load_state(f)
+        try:
+            with open("States/state_file.state", "rb") as f:
+                self.pyboy.load_state(f)
+        except FileNotFoundError:
+            print("Error: El archivo de estado no fue encontrado.")
+        except IOError as e:
+            print(f"Error de entrada/salida: {e}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado: {e}")
 
     def save_state(self):
         # Save to file

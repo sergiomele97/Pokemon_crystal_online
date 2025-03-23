@@ -4,7 +4,7 @@ import websockets
 
 class ServerConnection:
 
-    uri = "ws://strategic-kathie-pokemon-crystal-online-d82f6033.koyeb.app"
+    uri = "ws://compact-cissy-pokemon-crystal-online-db70265e.koyeb.app/"
 
     async def connect(self):
         async with websockets.connect(self.uri) as websocket:
